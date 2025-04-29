@@ -1,0 +1,53 @@
+# Виртуальное окружение
+.venv/
+venv/
+env/
+
+# Кэш Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Логи
+*.log
+
+# Конфигурации IDE
+.idea/
+.vscode/
+
+# Бинарные и временные файлы
+*.swp
+*.bak
+*.tmp
+*.DS_Store
+
+# Файлы pip
+pip-log.txt
+
+# Базы данных
+*.sqlite3
+
+# Тестовые отчёты
+htmlcov/
+.tox/
+.coverage
+coverage.xml
+nosetests.xml
+*.cover
+*.py,cover
+
+# Файлы jupyter notebook
+.ipynb_checkpoints/
+
+# dist/ и сборка
+build/
+dist/
+*.egg-info/
+.eggs/
+
+# dotenv-файлы с секретами
+.env
+.env.*
+
+# Docker
+*.pid
