@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    {% load static %}
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АС Заявочный ремонт</title>
+    <link rel="stylesheet" href="{% static 'main/style.css' %}">
+</head>
+<body>
+
+<div class="container">
+
+    <div id="welcome-screen">
+        <h1>АС «Заявочный ремонт»</h1>
+        <p>Добро пожаловать в демонстрационную версию!</p>
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Federalpkrzd.png/640px-Federalpkrzd.png" alt="Логотип" width="200"> 
+        <button onclick="showStep('input-data')">Вход</button>
+    </div>
+
+    <div id="input-data" style="display: none;">
+        <h2>Введите данные:</h2>
+        <input type="text" id="fio" placeholder="ФИО сотрудника">
+        <input type="text" id="tabel" placeholder="Табельный номер сотрудника">
+        <input type="text" id="train" placeholder="Поезд">
+        <input type="text" id="wagon" placeholder="Вагон">
+        <button onclick="submitUserData()">Далее</button>
+    </div>
+
+    <div id="main-content" style="display: none;">
+        <div id="user-info">
+            </div>
+        <div id="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
+             </div>
+        <h2 id="main-title">Выберите категорию</h2> <div id="buttons" class="buttons-container">
+            </div>
+    </div>
+
+</div>
+
+<script src="{% static 'main/script.js' %}"></script>
+
+</body>
+</html>
