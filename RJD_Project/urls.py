@@ -16,21 +16,30 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from main import views
+
+from dispatcher.views import get_latest_requests_view
+from main.views import welcome_screen, save_request_view, dispatcher_panel_view, update_request_status_view
+from users.views import register_view, login_view, logout_view, check_auth_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # URL для отображения формы ввода заявки
-    path('', views.welcome_screen, name='request_form'),
+    path('', welcome_screen, name='request_form'),
 
     # URL для AJAX-запроса сохранения заявки
-    path('api/request/save/', views.save_request_view, name='save_request_api'),
+    path('api/request/save/', save_request_view, name='save_request_api'),
 
     # URL для отображения диспетчерской панели
-    path('dispatcher/', views.dispatcher_panel_view, name='dispatcher_panel'),
+    path('dispatcher/', dispatcher_panel_view, name='dispatcher_panel'),
 
     # Доп. URL для обновления статуса заявки (пример)
-    path('api/request/<int:pk>/update_status/', views.update_request_status_view, name='update_request_status_api'),
+    path('api/request/<int:pk>/update_status/', update_request_status_view, name='update_request_status_api'),
+    path('api/requests/latest/', get_latest_requests_view, name='api_get_latest_requests'),
+
+    path('api/register/', register_view, name='api_register'),
+    path('api/login/', login_view, name='api_login'),
+    path('api/logout/', logout_view, name='api_logout'),
+    path('api/check_auth/', check_auth_view, name='api_check_auth'),
 ]
 
 

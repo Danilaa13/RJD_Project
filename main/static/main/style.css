@@ -147,3 +147,135 @@ button:disabled {
 .fade-out {
     opacity: 0;
 }
+
+/* Добавьте или измените эти стили */
+
+#login-screen,
+#registration-screen {
+    /* Общие стили для центрирования и внешнего вида */
+    display: flex; /* Используем flexbox для центрирования содержимого */
+    flex-direction: column; /* Элементы идут друг за другом */
+    align-items: center; /* Центрируем по горизонтали */
+    justify-content: center; /* Центрируем по вертикали (если нужно) */
+    padding: 20px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    background-color: #f9f9f9;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    max-width: 400px; /* Ограничиваем ширину формы */
+    margin: 50px auto; /* Центрируем блок по горизонтали */
+}
+
+#login-screen h2,
+#registration-screen h2 {
+    color: #333;
+    margin-bottom: 20px;
+}
+
+#login-screen input[type="text"],
+#login-screen input[type="password"],
+#registration-screen input[type="text"],
+#registration-screen input[type="password"] {
+    width: calc(100% - 20px); /* Почти полная ширина с учетом padding */
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+}
+
+#login-error-message,
+#registration-error-message {
+    color: red;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+#login-screen button,
+#registration-screen button {
+    /* Ваши стили для кнопок */
+    background-color: #007bff;
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1em;
+    margin-top: 5px; /* Отступ между кнопками */
+    transition: background-color 0.3s ease;
+}
+
+#login-screen button:hover,
+#registration-screen button:hover {
+    background-color: #0056b3;
+}
+
+/* Стили для кнопки "Назад" */
+.back-btn {
+    background-color: #6c757d; /* Серый цвет */
+}
+
+.back-btn:hover {
+    background-color: #5a6268;
+}
+
+/* Стили для кнопки, которая выглядит как ссылка */
+.link-button {
+    background: none; /* Без фона */
+    border: none; /* Без рамки */
+    color: #007bff; /* Цвет ссылки */
+    cursor: pointer;
+    padding: 0; /* Убираем внутренние отступы */
+    text-decoration: underline; /* Подчеркивание как у ссылки */
+    margin-top: 10px; /* Отступ сверху */
+    font-size: 0.9em; /* Немного меньше шрифт */
+}
+
+.link-button:hover {
+     text-decoration: none; /* Убираем подчеркивание при наведении */
+     color: #0056b3; /* Темнее при наведении */
+}
+
+.form-field {
+    margin-bottom: 15px;
+    width: 100%; /* Чтобы поля занимали доступную ширину */
+    max-width: 300px; /* Ограничиваем максимальную ширину для центрирования */
+    display: flex;
+    flex-direction: column; /* Располагаем метку над полем ввода */
+    align-items: flex-start; /* Выравнивание меток и полей по левому краю */
+}
+
+.form-field label {
+    margin-bottom: 5px; /* Отступ между меткой и полем */
+    font-weight: bold; /* Делаем метки жирными */
+    color: #555;
+}
+
+.form-field input[type="text"],
+.form-field input[type="date"],
+.form-field select{
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    width: calc(100% - 22px); /* Полная ширина минус padding и border */
+    box-sizing: border-box; /* Включаем padding и border в общую ширину */
+}
+
+/* Стиль для плейсхолдера в select */
+.form-field select option:first-child {
+    color: #999;
+}
+
+/* Стили для блока с информацией о пользователе */
+#input-user-info {
+     font-size: 0.95em;
+     color: #333;
+     width: 100%;
+     max-width: 300px;
+     box-sizing: border-box;
+}
+
+#input-user-info strong {
+    color: #000;
+}

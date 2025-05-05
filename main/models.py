@@ -1,29 +1,78 @@
+from users.models import CustomUser
 from django.db import models
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from django.urls import reverse
+import json
+
+
+
+class RequestStatus(models.TextChoices):
+
+    PENDING = 'pending', 'В ожидании'
+    IN_PROGRESS = 'in_progress', 'В работе'
+    COMPLETED = 'completed', 'Выполнена'
+    CANCELLED = 'cancelled', 'Отменена'
+    URGENT = 'urgent', 'Срочная'
+
 
 class RepairRequest(models.Model):
-    STATUS_CHOICES = [
-        ('new', 'Новая'),
-        ('assigned', 'В наряде'),
-        ('done', 'Выполнено'),
-        ('urgent', 'Срочная'), # Добавим "Срочная" как возможный статус
-    ]
 
-    # Информация о сотруднике и поезде (из формы)
-    employee_fio = models.CharField("ФИО сотрудника", max_length=200)
-    employee_tabel = models.CharField("Табельный номер", max_length=50)
-    train_number = models.CharField("Номер поезда", max_length=50)
-    wagon_number = models.CharField("Номер вагона", max_length=100) # Увеличил длину для формата 001-07656
+    user = models.ForeignKey(
+        CustomUser,
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='repair_requests',
+        verbose_name=_('Пользователь')
+    )
+
+    role = models.CharField(max_length=50, verbose_name=_('Роль'))
+    tabel = models.CharField(max_length=20, verbose_name=_('Табельный номер'))
+    fio = models.CharField(max_length=255, verbose_name=_('ФИО'))
+    departure_city = models.CharField(
+        max_length=100,
+        null=True,
+        blank=True,
+        verbose_name=_('Город отправления')
+    )
+    departure_date = models.DateField(
+        null=True,
+        blank=True,
+        verbose_name=_('Дата отправления')
+    )
+    train = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name=_('Поезд')
+    )
+    wagon = models.CharField(
+        max_length=50,
+        null=True,
+        blank=True,
+        verbose_name=_('Вагон')
+    )
 
     # Информация о неисправности (из JS навигации)
-    category_path = models.TextField("Путь по категориям") # Храним весь путь как строку
-    fault_description = models.CharField("Описание неисправности", max_length=255) # Последний выбранный элемент
-    classification_code = models.CharField("Код классификатора", max_length=20)
+    path_info = models.TextField(verbose_name=_('Путь неисправности'))
+    repair_code = models.CharField(max_length=10, verbose_name=_('Код неисправности'))
+
+    fault_description = models.CharField(
+        "Описание неисправности",  # Название в админке
+        max_length=255,  # Максимальная длина (можно увеличить, если нужно)
+        blank=True,  # Разрешить быть пустым (если по какой-то причине не удалось определить)
+        null=True  # Разрешить быть NULL в базе данных
+    )
 
     # Метаданные заявки
     created_at = models.DateTimeField("Время создания", default=timezone.now)
-    status = models.CharField("Статус", max_length=10, choices=STATUS_CHOICES, default='new')
+    status = models.CharField(
+        "Статус",
+        max_length=20,
+        choices=RequestStatus.choices,
+        default=RequestStatus.PENDING
+    )
     deadline = models.DateTimeField("Срок выполнения", null=True, blank=True) # Сделаем необязательным, будем вычислять
 
     # Дополнительные поля для соответствия панели (можно заполнять позже или сделать необязательными)
@@ -32,12 +81,8 @@ class RepairRequest(models.Model):
     # assigned_to = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='assigned_tasks') # Если есть система пользователей
 
     def __str__(self):
-        return f"Заявка {self.id} от {self.employee_fio} (Вагон: {self.wagon_number})"
+        return f"Заявка {self.pk} от {self.fio} ({self.role}) - Код: {self.repair_code}"
 
-    def get_absolute_url(self):
-        # Полезно для перенаправлений или ссылок, например, на страницу детализации
-        # return reverse('request_detail', kwargs={'pk': self.pk})
-        return reverse('dispatcher_panel') # После создания заявки перейдем на панель
 
     class Meta:
         verbose_name = "Заявка на ремонт"
@@ -54,6 +99,9 @@ class RepairRequest(models.Model):
 
     # Переопределим save, чтобы установить deadline, если он не задан
     def save(self, *args, **kwargs):
-        if not self.deadline:
-            self.deadline = self.calculate_default_deadline()
+        if not self.deadline and self.created_at:
+             if self.status == RequestStatus.URGENT:
+                 self.deadline = self.created_at + timezone.timedelta(hours=4)
+             else:
+                 self.deadline = self.created_at + timezone.timedelta(hours=24)
         super().save(*args, **kwargs)

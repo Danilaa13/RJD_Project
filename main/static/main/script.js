@@ -1,8 +1,66 @@
 // Данные остаются без изменений
-const data = {
+const allData = {
     "Проводник": {
         "Внутреннее оборудование": {
-            "Туалет": {
+            "Туалет №1": {
+                "Полотенцесушитель": { "Деформация/излом": "0366", "Нарушение ЛКП": "0366", "Отсутствие": "0366" },
+                "Порог": { "Нарушение ЛКП": "0367", "Деформация/излом": "0367", "Коррозия": "0367", "Не закреплён": "0367", "Отсутствие": "0367" },
+                "Потолок, покрытие": { "Нарушение ЛКП": "0370", "Деформация": "0370" },
+                "С/у, биотуалет": {
+                    "С/у, биотуалет": { "Утечка вакуума": "0381", "Неисправность шибера": "0381", "Неисправность блоков управления": "0381", "Неисправность подающего клапана": "0381", "Неисправность кнопки смыва": "0381", "Неисправность компрессора": "0381", "Неисправность насоса": "0381", "Не закреплён кожух": "0381", "Не запускается ЭЧТК": "0381", "Засор": "0381" },
+                    "С/у, унит.клоз.кольцо": { "Обрыв вала": "0393" },
+                    "С/у, унит.поддон": { "Обрыв поддона": "0394" },
+                    "С/у, унит.фикс.крышки": { "Деформация": "0395", "Обрыв": "0395" },
+                    "С/у, фановая труба": { "Деформация": "0396", "Обрыв": "0396", "Сквозная коррозия": "0396" },
+                    "С/у,унитаз арматура": { "Неисправность клапана": "0616", "Излом пружины": "0616", "Течь уплотнительного сальника": "0616", "Разрыв манжеты": "0616" }
+                },
+                "С/у, бумагодержатель": { "Отсутствие": "0382", "Излом": "0382", "Отсутсвие крышки": "0382" },
+                "С/у, запорная пробка": { "Отсутствие": "0383", "Излом": "0383" },
+                "С/у, кожух умыв.чаши": { "Деформация": "0384", "Обрыв петель": "0384", "Неиспрвность замка": "0384" },
+                "С/у, крепление ерша": { "Отсутствие": "0386", "Излом": "0386", "Крепление на стене не соответствует креплению бочка для ерша": "0386" },
+                "С/у, мыльница": { "Отсутствие": "0387", "Излом мыльницы": "0387", "Излом крепления": "0387" },
+                "С/у, стойки умывальн.": { "Коррозия": "0389", "Нарушение ЛКП": "0389", "Деформация": "0389" },
+                "С/у, туалетная полка": { "Нарушение ЛКП": "0390", "Коррозия": "0390", "Излом": "0390" },
+                "С/у, умывальная чаша": { "Деформация": "0391", "Засор": "0391", "Отсутствие противозасорной вставки": "0391" },
+                "Окно, стекло": { "Трещина": "0408", "Разбито": "0408", "Негерметичность уплотнителя": "0408" },
+                "Стеклопакет форточн.": { "Трещина": "0612", "Разбито": "0612", "Негерметичность уплотнителя": "0612", "Излом ручки": "0612", "Сломан замок": "0612" },
+                "Замок": { "Сломан механизм": "0613", "Отсутствует": "0613", "Нет контакта занятости": "0613", "Попадание инородных предметов в замок (грязь, пыль, масло)": "0613", "Излом": "0613" },
+                "Полотенцедержатель": { "Деформация корпуса": "0617", "Отсутствует замок": "0617", "Отсутствие полотенцедержателя": "0617" },
+                "Петли": { "Отсутствуют крепления": "0621", "Коррозия": "0621" },
+                "С/у, дозатор для жидкого мыла": { "Отсутствие дозатора": "0636", "Деформация корпуса": "0636", "Течь": "0636", "Излом замка": "0636", "Отсутвие замка": "0636", "Сломана кнопка нажатия": "0636" },
+                "С/у, мех.перем.ленты": { "Нет ленты": "0675", "Заедает": "0675", "Излом ручки": "0675", "Излом крышки": "0675", "Не закрывается": "0675" },
+                "С/у, датчики": { "Неисправность": "0676" }
+            },
+            "Туалет №2": {
+                "Полотенцесушитель": { "Деформация/излом": "0366", "Нарушение ЛКП": "0366", "Отсутствие": "0366" },
+                "Порог": { "Нарушение ЛКП": "0367", "Деформация/излом": "0367", "Коррозия": "0367", "Не закреплён": "0367", "Отсутствие": "0367" },
+                "Потолок, покрытие": { "Нарушение ЛКП": "0370", "Деформация": "0370" },
+                "С/у, биотуалет": {
+                    "С/у, биотуалет": { "Утечка вакуума": "0381", "Неисправность шибера": "0381", "Неисправность блоков управления": "0381", "Неисправность подающего клапана": "0381", "Неисправность кнопки смыва": "0381", "Неисправность компрессора": "0381", "Неисправность насоса": "0381", "Не закреплён кожух": "0381", "Не запускается ЭЧТК": "0381", "Засор": "0381" },
+                    "С/у, унит.клоз.кольцо": { "Обрыв вала": "0393" },
+                    "С/у, унит.поддон": { "Обрыв поддона": "0394" },
+                    "С/у, унит.фикс.крышки": { "Деформация": "0395", "Обрыв": "0395" },
+                    "С/у, фановая труба": { "Деформация": "0396", "Обрыв": "0396", "Сквозная коррозия": "0396" },
+                    "С/у,унитаз арматура": { "Неисправность клапана": "0616", "Излом пружины": "0616", "Течь уплотнительного сальника": "0616", "Разрыв манжеты": "0616" }
+                },
+                "С/у, бумагодержатель": { "Отсутствие": "0382", "Излом": "0382", "Отсутсвие крышки": "0382" },
+                "С/у, запорная пробка": { "Отсутствие": "0383", "Излом": "0383" },
+                "С/у, кожух умыв.чаши": { "Деформация": "0384", "Обрыв петель": "0384", "Неиспрвность замка": "0384" },
+                "С/у, крепление ерша": { "Отсутствие": "0386", "Излом": "0386", "Крепление на стене не соответствует креплению бочка для ерша": "0386" },
+                "С/у, мыльница": { "Отсутствие": "0387", "Излом мыльницы": "0387", "Излом крепления": "0387" },
+                "С/у, стойки умывальн.": { "Коррозия": "0389", "Нарушение ЛКП": "0389", "Деформация": "0389" },
+                "С/у, туалетная полка": { "Нарушение ЛКП": "0390", "Коррозия": "0390", "Излом": "0390" },
+                "С/у, умывальная чаша": { "Деформация": "0391", "Засор": "0391", "Отсутствие противозасорной вставки": "0391" },
+                "Окно, стекло": { "Трещина": "0408", "Разбито": "0408", "Негерметичность уплотнителя": "0408" },
+                "Стеклопакет форточн.": { "Трещина": "0612", "Разбито": "0612", "Негерметичность уплотнителя": "0612", "Излом ручки": "0612", "Сломан замок": "0612" },
+                "Замок": { "Сломан механизм": "0613", "Отсутствует": "0613", "Нет контакта занятости": "0613", "Попадание инородных предметов в замок (грязь, пыль, масло)": "0613", "Излом": "0613" },
+                "Полотенцедержатель": { "Деформация корпуса": "0617", "Отсутствует замок": "0617", "Отсутствие полотенцедержателя": "0617" },
+                "Петли": { "Отсутствуют крепления": "0621", "Коррозия": "0621" },
+                "С/у, дозатор для жидкого мыла": { "Отсутствие дозатора": "0636", "Деформация корпуса": "0636", "Течь": "0636", "Излом замка": "0636", "Отсутвие замка": "0636", "Сломана кнопка нажатия": "0636" },
+                "С/у, мех.перем.ленты": { "Нет ленты": "0675", "Заедает": "0675", "Излом ручки": "0675", "Излом крышки": "0675", "Не закрывается": "0675" },
+                "С/у, датчики": { "Неисправность": "0676" }
+            },
+            "Туалет №3": {
                 "Полотенцесушитель": { "Деформация/излом": "0366", "Нарушение ЛКП": "0366", "Отсутствие": "0366" },
                 "Порог": { "Нарушение ЛКП": "0367", "Деформация/излом": "0367", "Коррозия": "0367", "Не закреплён": "0367", "Отсутствие": "0367" },
                 "Потолок, покрытие": { "Нарушение ЛКП": "0370", "Деформация": "0370" },
@@ -117,18 +175,33 @@ const data = {
             }
         }
     },
-    "ПЭМ": {}, // Оставляем пустыми, как в оригинале
+    "ПЭМ": {
+        "Электрооборудование": {
+             "Освещение": {"Не горит лампа": "E001", "Мерцает свет": "E002"},
+             "Розетки": {"Нет напряжения": "E003", "Повреждена": "E004"}
+        },
+        "Климат-контроль": {
+             "Не греет": {"Слабый нагрев": "C001", "Нет нагрева": "C002"},
+             "Не охлаждает": {"Слабое охлаждение": "C003", "Нет охлаждения": "C004"}
+        }
+        }, // Оставляем пустыми, как в оригинале
     "ПДК": {},
     "Ревизор": {}
 };
 
 let path = []; // Текущий путь навигации
 let userData = {}; // Данные пользователя
+let selectedRole = null; // Храним выбранную роль
+let currentRoleData = {}; // Данные для текущей роли
+
 
 // Функция для показа нужного этапа (из HTML)
 function showStep(stepId) {
     // Скрываем все основные блоки
     document.getElementById('welcome-screen').style.display = 'none';
+    document.getElementById('role-selection').style.display = 'none';
+    document.getElementById('login-screen').style.display = 'none'; // Добавлено
+    document.getElementById('registration-screen').style.display = 'none'; // Добавлено
     document.getElementById('input-data').style.display = 'none';
     document.getElementById('main-content').style.display = 'none';
 
@@ -136,48 +209,316 @@ function showStep(stepId) {
     const stepElement = document.getElementById(stepId);
     if (stepElement) {
         stepElement.style.display = 'block';
+    } else {
+        console.error(`Элемент с ID "${stepId}" не найден.`);
     }
 }
 
-// Функция, вызываемая при нажатии "Далее" после ввода данных
-function submitUserData() {
-    const fio = document.getElementById("fio").value.trim();
-    const tabel = document.getElementById("tabel").value.trim(); // Получаем табельный номер
-    const train = document.getElementById("train").value.trim();
-    const wagon = document.getElementById("wagon").value.trim();
+// Функция: Выбор роли
+function selectRole(role) {
+    selectedRole = role;
+    console.log("Выбрана роль:", selectedRole);
 
-    // Простая валидация
-    if (!fio || !tabel || !train || !wagon) {
-        alert("Пожалуйста, заполните все поля");
+    // Переходим на экран авторизации для выбранной роли
+    showStep('login-screen');
+    document.getElementById('login-role-display').textContent = selectedRole; // Показываем выбранную роль на экране логина
+    document.getElementById('login-error-message').textContent = ''; // Очищаем сообщение об ошибке
+    document.getElementById('login-tabel').value = ''; // Очищаем поля
+    document.getElementById('login-password').value = ''; // Очищаем поле пароля
+}
+
+// Функция: Попытка авторизации через сервер
+async function attemptLogin() {
+    const tabel = document.getElementById("login-tabel").value.trim();
+    const password = document.getElementById("login-password").value.trim(); // Получаем пароль
+    const errorMessageElement = document.getElementById("login-error-message");
+    errorMessageElement.textContent = ''; // Очищаем предыдущие ошибки
+
+    if (!tabel || !password) {
+        errorMessageElement.textContent = "Пожалуйста, введите табельный номер и пароль.";
         return;
     }
 
-    // Сохраняем данные
-    userData = { fio, tabel, train, wagon };
+    const loginData = {
+        role: selectedRole,
+        tabel: tabel,
+        password: password
+    };
 
-    // Показываем следующий этап
+    const url = '/api/login/'; // URL вашего серверного endpoint для авторизации
+
+    // --- Получение CSRF токена ---
+    function getCookie(name) { /* ... ваш существующий код получения куки ... */
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    // -----------------------------
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                ...(csrftoken && {'X-CSRFToken': csrftoken})
+            },
+            body: JSON.stringify(loginData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+            // Авторизация успешна на сервере
+            console.log("Авторизация успешна:", result.user);
+            // Сохраняем данные пользователя, полученные от сервера
+            userData = {
+                 role: result.user.role,
+                 tabel: result.user.tabel,
+                 fio: result.user.fio
+                 // Не сохраняйте пароль на клиенте!
+            };
+
+            proceedAfterLogin(); // Переходим к следующему шагу после успешной авторизации
+
+        } else {
+            // Сервер вернул ошибку авторизации
+            errorMessageElement.textContent = result.message || 'Ошибка авторизации. Проверьте учетные данные.';
+            console.warn("Авторизация не удалась:", result.message);
+        }
+    } catch (error) {
+        console.error('Ошибка сети или запроса авторизации:', error);
+        errorMessageElement.textContent = 'Произошла ошибка при попытке авторизации. Попробуйте позже.';
+    }
+}
+
+// функция: Переход на экран регистрации
+function navigateToRegistration() {
+    showStep('registration-screen');
+    document.getElementById('registration-role-display').textContent = selectedRole; // Показываем выбранную роль на экране регистрации
+    document.getElementById('registration-error-message').textContent = ''; // Очищаем ошибки
+    document.getElementById('reg-tabel').value = ''; // Очищаем поля
+    document.getElementById('reg-fio').value = '';
+    document.getElementById('reg-password').value = '';
+    document.getElementById('reg-password-confirm').value = '';
+}
+
+//  функция: Отправка запроса на регистрацию на сервер
+async function registerUser() {
+    const tabel = document.getElementById("reg-tabel").value.trim();
+    const fio = document.getElementById("reg-fio").value.trim();
+    const password = document.getElementById("reg-password").value.trim();
+    const passwordConfirm = document.getElementById("reg-password-confirm").value.trim();
+    const errorMessageElement = document.getElementById("registration-error-message");
+    errorMessageElement.textContent = ''; // Очищаем предыдущие ошибки
+
+    if (!tabel || !fio || !password || !passwordConfirm) {
+        errorMessageElement.textContent = "Пожалуйста, заполните все поля.";
+        return;
+    }
+
+    if (password !== passwordConfirm) {
+        errorMessageElement.textContent = "Пароль и подтверждение пароля не совпадают.";
+        return;
+    }
+
+    // Можно добавить минимальную проверку сложности пароля, если нужно
+
+    const registrationData = {
+        role: selectedRole,
+        tabel: tabel,
+        fio: fio,
+        password: password
+    };
+
+    const url = '/api/register/'; // URL вашего серверного endpoint для регистрации
+
+     // --- Получение CSRF токена ---
+    function getCookie(name) { /* ... ваш существующий код получения куки ... */
+        let cookieValue = null;
+        if (document.cookie && document.cookie !== '') {
+            const cookies = document.cookie.split(';');
+            for (let i = 0; i < cookies.length; i++) {
+                const cookie = cookies[i].trim();
+                if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                    cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                    break;
+                }
+            }
+        }
+        return cookieValue;
+    }
+    const csrftoken = getCookie('csrftoken');
+    // -----------------------------
+
+
+    try {
+        const response = await fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                 ...(csrftoken && {'X-CSRFToken': csrftoken})
+            },
+            body: JSON.stringify(registrationData)
+        });
+
+        const result = await response.json();
+
+        if (response.ok && result.status === 'success') {
+            // Регистрация успешна на сервере
+            console.log("Регистрация успешна:", result.message);
+            alert("Регистрация успешна! Теперь вы можете войти.");
+            // Перенаправляем на экран авторизации после успешной регистрации
+            showStep('login-screen');
+            document.getElementById('login-role-display').textContent = selectedRole;
+            document.getElementById('login-error-message').textContent = '';
+             // Можете предварительно заполнить поле табельного номера
+            document.getElementById('login-tabel').value = tabel;
+            document.getElementById('login-password').value = ''; // Очищаем поле пароля
+        } else {
+            // Сервер вернул ошибку регистрации
+            errorMessageElement.textContent = result.message || 'Ошибка регистрации.';
+            console.warn("Регистрация не удалась:", result.message);
+        }
+    } catch (error) {
+        console.error('Ошибка сети или запроса регистрации:', error);
+        errorMessageElement.textContent = 'Произошла ошибка при попытке регистрации. Попробуйте позже.';
+    }
+}
+
+function proceedAfterLogin() {
+     // Убедимся, что userData содержит все необходимые поля после логина
+     if (!userData || !userData.role || !userData.tabel || !userData.fio) {
+         console.error("userData неполна после логина", userData);
+         alert("Ошибка при получении данных пользователя после авторизации.");
+         showStep('login-screen'); // Вернуться на логин
+         return;
+     }
+
+    // Загружаем данные для выбранной роли, если они есть в alldata
+    if (allData[userData.role] && Object.keys(allData[userData.role]).length > 0) {
+         currentRoleData = allData[userData.role];
+    } else {
+         currentRoleData = {}; // Нет данных неисправностей для этой роли
+         console.warn(`Нет данных неисправностей в allData для роли: ${userData.role}`);
+    }
+
+    // Решаем, куда перенаправить пользователя после авторизации
+    // Используем userData.role, так как selectedRole может быть изменена позже
+    if (userData.role === "ПДК") {
+        // Если Диспетчер успешно авторизован, перенаправляем на страницу диспетчера
+        alert("Авторизация Диспетчера успешна. Перенаправление...");
+        window.location.href = '/dispatcher/'; // Убедитесь, что этот URL существует и работает
+        // Если страница диспетчера не отдельная, а является частью этого же интерфейса:
+        // showStep('main-content');
+        // document.getElementById("user-info").innerHTML = `...информация о диспетчере...`; // Обновите инфо блок
+        // renderButtons(currentRoleData); // Отрисуйте кнопки, специфичные для диспетчера
+    } else if (userData.role === "Проводник" || userData.role === "ПЭМ") {
+        // Проводнику и ПЭМ нужно ввести данные поезда/вагона после авторизации
+        showStep('input-data');
+        // Обновляем роль на экране ввода данных
+        document.getElementById('role-display').textContent = userData.role;
+        const inputUserInfoDiv = document.getElementById('input-user-info');
+        if (inputUserInfoDiv) {
+            inputUserInfoDiv.innerHTML = `
+                <strong>Сотрудник:</strong> ${userData.fio}<br>
+                <strong>Табельный номер:</strong> ${userData.tabel}
+            `;
+        } else {
+            console.error("Элемент #input-user-info не найден!");
+        }
+         // Очищаем поля Поезда/Вагона на всякий случай
+        document.getElementById('departure-city').value = '';
+        document.getElementById('departure-date').value = '';
+        document.getElementById('train').value = '';
+        document.getElementById('wagon').value = '';
+        // ФИО и Табель уже в userData, их не нужно вводить повторно
+    } else {
+         // Для других ролей (например, Ревизор), возможно, сразу главный экран или другой шаг
+         showStep('main-content'); // Переходим на главный экран
+         // Обновляем информацию о пользователе на главном экране
+         document.getElementById("user-info").innerHTML = `
+             <strong>Роль:</strong> ${userData.role}<br>
+             <strong>Сотрудник:</strong> ${userData.fio} (табель: ${userData.tabel || 'не указан'})
+         `;
+          // Скрываем ввод поезда/вагона на главном экране, если роль не Проводник/ПЭМ
+         const inputDataSection = document.getElementById('input-data'); // Не совсем верно, input-data - отдельный экран.
+         // Лучше не отображать поезд/вагон в user-info на главном экране, если они не вводились.
+         // Или добавить логику в submitUserData, чтобы она вела на main-content без ввода поезда/вагона для Ревизора
+         path = []; // Сбрасываем путь для начала навигации по категориям
+         renderButtons(currentRoleData);
+    }
+}
+
+
+// Функция, вызываемая при нажатии "Далее" после ввода данных
+function submitUserData() {
+    // Убедимся, что userData существует и содержит роль Проводник или ПЭМ, а также табель и фио
+    if (!userData || !(userData.role === "Проводник" || userData.role === "ПЭМ") || !userData.tabel || !userData.fio) {
+        console.error("submitUserData вызвана некорректно или userData неполна", userData);
+        alert("Ошибка: Невозможно отправить данные. Неверный рабочий процесс или данные пользователя.");
+         showStep('role-selection'); // Вернуться к выбору роли
+        return;
+    }
+
+    const departureCitySelect = document.getElementById("departure-city");
+    const departureCity = departureCitySelect.value;
+
+    const departureDate = document.getElementById("departure-date").value.trim();
+    const train = document.getElementById("train").value.trim();
+    const wagon = document.getElementById("wagon").value.trim();
+
+    // Простая валидация для Поезда и Вагона
+   if (!departureCity || departureCity === "" || !departureDate || !train || !wagon) { // Проверяем, что город выбран
+        alert("Пожалуйста, заполните все поля рейса (Город, Дата, Поезд, Вагон)");
+        return;
+    }
+
+    // Добавляем данные поезда и вагона к существующим данным пользователя
+    userData.departureCity = departureCity;
+    userData.departureDate = departureDate;
+    userData.train = train;
+    userData.wagon = wagon;
+
+
+    console.log("Полные данные пользователя и рейса для заявки:", userData);
+
+    // Показываем главный экран
     showStep('main-content');
 
-    // Отображаем информацию о пользователе
+    // Отображаем всю информацию о пользователе
     document.getElementById("user-info").innerHTML = `
+        <strong>Роль:</strong> ${userData.role}<br>
         <strong>Сотрудник:</strong> ${userData.fio} (табель: ${userData.tabel})<br>
+        <strong>Город отправления:</strong> ${userData.departureCity}<br>
+        <strong>Дата отправления:</strong> ${userData.departureDate}<br>
         <strong>Поезд:</strong> ${userData.train}<br>
         <strong>Вагон:</strong> ${userData.wagon}
     `;
 
-    // Сбрасываем путь и отображаем кнопки первого уровня
-    path = [];
-    renderButtons(data, false); // false - без анимации при первой загрузке
+    // Сбрасываем путь и отображаем кнопки первого уровня для этой роли
+    path = []; // Начинаем навигацию по неисправностям с начала
+    // currentRoleData уже должна быть установлена в proceedAfterLogin()
+    renderButtons(currentRoleData, false);
 }
 
 // Функция для отрисовки кнопок на текущем уровне
-function renderButtons(currentData, animate = true) {
+function renderButtons(dataToRender, animate = true) {
     const buttonsDiv = document.getElementById("buttons");
     const mainTitle = document.getElementById("main-title");
     updateBreadcrumb(); // Обновляем хлебные крошки
 
     // Устанавливаем заголовок в зависимости от того, конечный ли это узел
-    if (typeof currentData === "string") {
+    if (typeof dataToRender === "string") {
         mainTitle.textContent = "Классификатор ТБОР";
     } else if (path.length === 0) {
          mainTitle.textContent = "Выберите категорию";
@@ -189,26 +530,39 @@ function renderButtons(currentData, animate = true) {
     if (animate) {
         buttonsDiv.classList.add("fade-out");
         // Задержка для анимации исчезновения перед обновлением
-        setTimeout(() => updateButtonsContent(buttonsDiv, currentData), 300);
+        setTimeout(() => updateButtonsContent(buttonsDiv, dataToRender), 300);
     } else {
-        updateButtonsContent(buttonsDiv, currentData);
+        updateButtonsContent(buttonsDiv, dataToRender);
     }
 }
 
 // Определяем функцию отправки на верхнем уровне
+// Корректируем функцию sendRequestToServer
 async function sendRequestToServer(code) {
-    const url = '/api/request/save/'; // URL из вашего urls.py
-    console.log("Sending request with code:", code, "Path:", path, "User Data:", userData); // Отладочный вывод
+    const url = '/api/request/save/'; // URL вашего urls.py
+    console.log("Отправка запроса с кодом:", code, "Путь:", path, "Данные пользователя:", userData);// Отладочный вывод
+
+     // Убедимся, что данные пользователя полны для отправки заявки
+     // Для Проводника/ПЭМ нужны поезд и вагон. Для других ролей может быть иначе.
+     // Добавим проверку только если это Проводник или ПЭМ
+      if ((userData.role === "Проводник" || userData.role === "ПЭМ") && (!userData.fio || !userData.tabel || !userData.departureCity || !userData.departureDate || !userData.train || !userData.wagon)) { // Добавлена проверка на departure_city
+          console.error("Недостаточно данных для отправки заявки (ФИО, Табель, Город, Дата, Поезд, Вагон).", userData);
+          alert("Ошибка: Недостаточно данных для отправки заявки. Пожалуйста, вернитесь и заполните все необходимые поля.");
+          // Остаемся на текущем экране с ошибкой
+          return;
+     }
+
 
     // Собираем данные для отправки
     const dataToSend = {
-        userData: userData, // Объект с fio, tabel, train, wagon
+        // Отправляем полные данные пользователя, которые были собраны после логина и ввода поезда/вагона
+        userData: userData,
         path: path,         // Массив строк - путь навигации
         code: code          // Финальный код неисправности
     };
 
     // --- Получение CSRF токена (ВАЖНО для безопасности!) ---
-    function getCookie(name) {
+    function getCookie(name) { /* ... ваш существующий код получения куки ... */
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
@@ -227,9 +581,8 @@ async function sendRequestToServer(code) {
 
     if (!csrftoken) {
         console.warn("CSRF token not found. Request might fail if CSRF protection is enabled.");
-        // Можно вывести сообщение пользователю или предпринять другие действия
-        // alert("Ошибка безопасности (CSRF). Попробуйте обновить страницу.");
-        // return; // Раскомментируйте, если хотите прервать отправку без токена
+        alert("Ошибка безопасности (CSRF). Попробуйте обновить страницу.");
+        return;
     }
 
 
@@ -238,7 +591,7 @@ async function sendRequestToServer(code) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                ...(csrftoken && {'X-CSRFToken': csrftoken}) // Добавляем токен, если он есть
+                'X-CSRFToken': csrftoken // Добавляем токен
             },
             body: JSON.stringify(dataToSend)
         });
@@ -246,26 +599,26 @@ async function sendRequestToServer(code) {
         const result = await response.json();
 
         if (response.ok && result.status === 'success') {
-            alert('Заявка успешно отправлена!');
-            // Опционально: перенаправить или сбросить
-             window.location.href = '/dispatcher/'; // Пример перехода на панель
-            // path = [];
-            // renderButtons(data);
+            alert(`Заявка (${code}) успешно отправлена!`);
+            // После успешной отправки заявки, возможно, сбросим выбор неисправности
+            path = [];
+            renderButtons(currentRoleData); // Вернуться к началу выбора неисправностей
         } else {
+             // Если есть ошибка на сервере (например, валидация данных заявки)
             alert(`Ошибка отправки заявки: ${result.message || response.statusText || 'Неизвестная ошибка'}`);
         }
     } catch (error) {
         console.error('Ошибка сети или отправки:', error);
-        alert('Произошла ошибка при отправке данных. Проверьте консоль и сетевые запросы (F12).');
+        alert('Произошла ошибка при отправке данных. Проверьте консоль.');
     }
 }
 
 
-// ... (другие функции: showStep, submitUserData, renderButtons) ...
+
 
 
 // Функция для обновления содержимого контейнера кнопок
-function updateButtonsContent(buttonsDiv, currentData) {
+function updateButtonsContent(buttonsDiv, currentLevelData) {
     buttonsDiv.innerHTML = ""; // Очищаем контейнер
 
     // Добавляем кнопку "Назад", если мы не на верхнем уровне
@@ -275,17 +628,31 @@ function updateButtonsContent(buttonsDiv, currentData) {
         backButton.classList.add("back-btn");
         backButton.onclick = () => {
             path.pop();
-            renderButtons(getCurrentData());
+            renderButtons(getCurrentData()); // Перерисовываем с данными уровня выше
         };
         buttonsDiv.appendChild(backButton);
+    } else {
+         // НОВОЕ: Добавляем кнопку "Сменить роль" на верхнем уровне
+         const changeRoleButton = document.createElement("button");
+         changeRoleButton.textContent = "Сменить роль / Выйти";
+         changeRoleButton.classList.add("back-btn"); // Используем тот же стиль
+         changeRoleButton.onclick = () => {
+             // Сбросить все и вернуться к выбору роли
+             userData = {};
+             selectedRole = null;
+             currentRoleData = {};
+             path = [];
+             showStep('role-selection');
+         };
+         buttonsDiv.appendChild(changeRoleButton);
     }
 
     // --- ИСПОЛЬЗУЕМ ТОЛЬКО МОДИФИЦИРОВАННЫЙ БЛОК ---
     // Если текущий узел данных - строка (конечный код)
-    if (typeof currentData === "string") {
+    if (typeof currentLevelData === "string") {
         const codeElement = document.createElement("div");
         codeElement.classList.add("final-code");
-        codeElement.innerHTML = `<strong>Код неисправности:</strong> ${currentData}`;
+        codeElement.innerHTML = `<strong>Код неисправности:</strong> ${currentLevelData}`;
         buttonsDiv.appendChild(codeElement);
 
         // Добавляем кнопку "Отправить заявку"
@@ -294,44 +661,51 @@ function updateButtonsContent(buttonsDiv, currentData) {
         submitButton.classList.add("submit-request-btn");
         submitButton.onclick = () => {
             // Вызываем ГЛОБАЛЬНУЮ функцию отправки данных
-            sendRequestToServer(currentData);
+            sendRequestToServer(currentLevelData);
         };
         buttonsDiv.appendChild(submitButton);
 
         // Кнопка "Выбрать другую"
         const resetButton = document.createElement("button");
-        resetButton.textContent = "Выбрать другую";
+        resetButton.textContent = "Выбрать другую неисправность";
         resetButton.classList.add("reset-btn");
         resetButton.onclick = () => {
              path = [];
-             renderButtons(data);
+             renderButtons(currentRoleData);
         };
         buttonsDiv.appendChild(resetButton);
     }
     // --- КОНЕЦ БЛОКА ДЛЯ СТРОКИ ---
 
     // Если это объект (есть вложенные категории/неисправности)
-    else if (typeof currentData === 'object' && currentData !== null) {
-        for (const key in currentData) {
-            const isEmptyObject = typeof currentData[key] === 'object' && Object.keys(currentData[key]).length === 0;
+    else if (typeof currentLevelData === 'object' && currentLevelData !== null) { // Узел с категориями
+        for (const key in currentLevelData) {
+             // Проверяем, существует ли следующий уровень или это пустой объект
+             const nextLevel = currentLevelData[key];
+             const isEmptyObject = typeof nextLevel === 'object' && nextLevel !== null && Object.keys(nextLevel).length === 0;
+             // Проверяем, является ли значение просто строкой (код)
+             const isFinalCode = typeof nextLevel === 'string';
 
             const button = document.createElement("button");
             button.textContent = key;
             button.onclick = () => {
                 path.push(key);
-                renderButtons(getCurrentData());
+                renderButtons(getCurrentData()); // Перерисовываем для нового уровня
             };
 
-            if ((path.length === 0 && (key === "ПДК" || key === "Ревизор")) || isEmptyObject) {
-                button.disabled = true;
-                button.title = isEmptyObject ? "В данной категории пока нет данных" : "Категория недоступна";
-            }
+            // Сделаем кнопку неактивной, если для нее нет данных (пустой объект)
+             if (isEmptyObject) {
+                 button.disabled = true;
+                 button.title = "В данной категории пока нет данных";
+             }
+
+             // Можно добавить проверку на другие роли, если нужно их отображать, но делать неактивными
+             // if (path.length === 0 && (key === "ПДК")) { ... } - это уже не нужно здесь, так как мы фильтруем на уровне selectRole
+
             buttonsDiv.appendChild(button);
         }
-    }
-    // Случай пустого объекта или другого типа данных
-    else {
-         buttonsDiv.textContent = "Нет данных для отображения.";
+    } else { // Нет данных
+        buttonsDiv.textContent = "Нет данных для отображения.";
     }
 
     // Анимация (остается без изменений)
@@ -350,7 +724,7 @@ function updateBreadcrumb() {
     // Всегда добавляем ссылку "Главная"
     const homeLink = document.createElement("a");
     homeLink.href = "#";
-    homeLink.textContent = "Главная";
+    homeLink.textContent = selectedRole || "Начало"; // Показываем роль или "Начало"
     homeLink.onclick = (e) => {
         e.preventDefault(); // Предотвращаем переход по #
         goToLevel(0);
@@ -358,38 +732,34 @@ function updateBreadcrumb() {
     breadcrumbDiv.appendChild(homeLink);
 
     // Добавляем остальные уровни пути
-    let currentData = data;
+    let currentLevelData = currentRoleData; // Начинаем с данных для роли
     path.forEach((level, index) => {
+        if (!currentLevelData || typeof currentLevelData !== 'object') return; // Предохранитель
+
         const separator = document.createElement("span");
         separator.textContent = " › ";
         breadcrumbDiv.appendChild(separator);
 
-        // Если это не последний элемент пути, делаем его ссылкой
-        if (index < path.length - 1) {
+        if (index < path.length - 1) { // Не последний элемент
             const levelLink = document.createElement("a");
             levelLink.href = "#";
             levelLink.textContent = level;
-            // Замыкание, чтобы сохранить правильный index+1 для goToLevel
             levelLink.onclick = ((levelIndex) => (e) => {
                  e.preventDefault();
                  goToLevel(levelIndex);
-            })(index + 1);
+            })(index + 1); // index + 1, так как goToLevel ожидает количество уровней
             breadcrumbDiv.appendChild(levelLink);
-        } else {
-            // Последний элемент - просто текст
+        } else { // Последний элемент
             const levelText = document.createElement("span");
             levelText.textContent = level;
             breadcrumbDiv.appendChild(levelText);
         }
-        // Переходим на следующий уровень данных для следующей итерации (не обязательно, но может пригодиться)
-        if(currentData && currentData[level]) {
-            currentData = currentData[level];
-        }
+        // Переходим глубже по данным для следующей итерации (если есть)
+         currentLevelData = currentLevelData[level];
     });
-     // Показываем хлебные крошки только если есть путь
+     // Показываем крошки, только если есть путь
      breadcrumbDiv.style.display = path.length > 0 ? 'block' : 'none';
 }
-
 
 // Переход на указанный уровень в хлебных крошках
 function goToLevel(levelIndex) {
@@ -399,11 +769,20 @@ function goToLevel(levelIndex) {
 
 // Вспомогательная функция для получения данных текущего уровня по пути
 function getCurrentData() {
-    // Используем reduce для навигации по объекту data согласно пути path
-    return path.reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : data), data); // Возвращаем data, если путь пуст или неверен
+    // Используем reduce для навигации по объекту currentRoleData согласно пути path
+     // Начинаем с currentRoleData, а не allData
+    return path.reduce((obj, key) => (obj && obj[key] !== undefined ? obj[key] : currentRoleData), currentRoleData);
 }
 
 // Инициализация: показываем только приветственный экран при загрузке страницы
 document.addEventListener('DOMContentLoaded', () => {
-    showStep('welcome-screen');
+     // Изменяем действие кнопки "Вход" на приветственном экране
+     const welcomeButton = document.getElementById('welcome-login-button');
+     if (welcomeButton) {
+         welcomeButton.onclick = () => showStep('role-selection'); // Ведет на выбор роли
+     } else {
+         console.error("Кнопка 'Вход' на приветственном экране не найдена!");
+     }
+
+    showStep('welcome-screen'); // Показываем стартовый экран
 });

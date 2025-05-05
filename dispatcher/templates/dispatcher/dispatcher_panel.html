@@ -7,6 +7,7 @@
     <title>Диспетчерская панель - АС Заявочный ремонт</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="{% static 'dispatcher/style.css' %}">
+    {# Загружаем Luxon глобально #}
     <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.1/build/global/luxon.min.js"></script>
 
 </head>
@@ -19,8 +20,9 @@
         </div>
         <div class="user-info">
             <div style="text-align: right;">
-                <div class="user-name">{{ user.get_full_name|default:"Иванов И.И." }}</div>
-                <div class="user-role">{{ user.profile.role|default:"Диспетчер" }}</div>
+                {# Используем .fio и .role, добавляем default для безопасности #}
+                <div class="user-name">{{ user.fio|default:"Неизвестный пользователь" }}</div>
+                <div class="user-role">Диспетчер</div>
             </div>
             <div class="user-avatar">
                 <i class="fas fa-user"></i>
@@ -32,19 +34,19 @@
         <div class="stat-card">
             <div class="stat-title">Всего заявок</div>
             <div class="stat-value">{{ stats.total }}</div>
-            </div>
+        </div>
         <div class="stat-card">
             <div class="stat-title">В работе</div>
             <div class="stat-value">{{ stats.in_progress }}</div>
-            </div>
+        </div>
         <div class="stat-card">
             <div class="stat-title">Выполнено</div>
             <div class="stat-value">{{ stats.done }}</div>
-            </div>
+        </div>
         <div class="stat-card">
             <div class="stat-title">Срочные</div>
             <div class="stat-value">{{ stats.urgent }}</div>
-            </div>
+        </div>
     </div>
 
     <div class="controls">
@@ -58,57 +60,94 @@
                 <option value="new">Новые</option>
                 <option value="assigned">В наряде</option>
                 <option value="done">Выполнено</option>
-                <option value="urgent">Срочные</option>
+                <option value="urgent">Срочная</option>
+                {# Добавьте другие статусы, если нужны #}
             </select>
         </div>
     </div>
 
     <div class="task-list" id="task-list">
         {% for req in requests %}
-        <div class="task-card" data-status="{{ req.status }}" data-request-id="{{ req.id }}">
+        {# !!! Убедитесь, что у вас именно ТАК прописан атрибут data-created-at !!! #}
+        <div class="task-card"
+             data-status="{{ req.status }}"
+             data-request-id="{{ req.id }}"
+             data-created-at="{{ req.created_at.isoformat }}"> {# Важно: передаем дату в ISO формате #}
+
             <div class="task-header">
-                <div class="task-title">Зафиксировал: {{ req.employee_fio }}</div>
+                <div class="task-title">Зафиксировал: {{ req.fio|default:"-" }}</div> {# Добавляем default #}
                 <div class="task-status status-{{ req.status }}">
-                    {{ req.get_status_display }} </div>
+                    {{ req.get_status_display }}
+                </div>
             </div>
-            <div class="task-info">
-                <span class="label"><i class="fas fa-train"></i> Поезд:</span>
-                <span class="value">{{ req.train_number }}</span>
-            </div>
+
              <div class="task-info">
                  <span class="label"><i class="fas fa-hashtag"></i> Табель:</span>
-                 <span class="value">{{ req.employee_tabel }}</span>
+                 <span class="value">{{ req.tabel|default:"-" }}</span> {# Добавляем default #}
              </div>
             <div class="task-info">
                 <span class="label"><i class="far fa-calendar-alt"></i> Дата создания:</span>
-                <span class="value">{{ req.created_at|date:"d/m/Y H:i" }}</span> </div>
+                {# Используем фильтр date для форматирования #}
+                <span class="value">{{ req.created_at|date:"d/m/Y H:i"|default:"-" }}</span> {# Добавляем default #}
+            </div>
+
+            {# Информация о городе и дате отправления #}
+            {% if req.departure_city %}
+            <div class="task-info">
+                <span class="label"><i class="fas fa-city"></i> Город отпр.:</span>
+                <span class="value">{{ req.departure_city }}</span>
+            </div>
+            {% endif %}
+
+             {% if req.departure_date %}
+             <div class="task-info">
+                 <span class="label"><i class="fas fa-calendar-alt"></i> Дата отпр.:</span>
+                 {# Используем фильтр date для форматирования #}
+                 <span class="value">{{ req.departure_date|date:"d/m/Y" }}</span>
+             </div>
+             {% endif %}
+
+            {# Информация о рейсе #}
+            <div class="task-info">
+                <span class="label"><i class="fas fa-train"></i> Поезд:</span>
+                <span class="value">{{ req.train|default:"-" }}</span>
+            </div>
+             <div class="task-info">
+                <span class="label"><i class="fas fa-box"></i> Вагон:</span>
+                <span class="value">{{ req.wagon|default:"-" }}</span>
+            </div>
             {% if req.route %}
             <div class="task-info">
                 <span class="label"><i class="fas fa-route"></i> Маршрут:</span>
                 <span class="value">{{ req.route }}</span>
             </div>
             {% endif %}
-            <div class="task-info">
-                <span class="label"><i class="fas fa-box"></i> Вагон:</span>
-                <span class="value">{{ req.wagon_number }}</span>
-            </div>
             {% if req.location %}
             <div class="task-info">
                 <span class="label"><i class="fas fa-map-marker-alt"></i> Пункт:</span>
                 <span class="value">{{ req.location }}</span>
             </div>
              {% endif %}
+
+             {# Информация о неисправности #}
              <div class="task-info">
-                 <span class="label"><i class="fas fa-wrench"></i> Категория:</span>
-                 <span class="value" title="{{ req.category_path }}">{{ req.fault_description }}</span> </div>
+                 <span class="label"><i class="fas fa-wrench"></i> Неисправность:</span>
+                 {# fault_description теперь должен заполняться в представлении #}
+                 {# path_info используется в title для полной детализации #}
+                 <span class="value" title="{{ req.path_info|default:"-" }}">
+                     {{ req.fault_description|default:"-" }} 
+                 </span>
+             </div>
             <div class="task-info">
                 <span class="label"><i class="fas fa-exclamation-triangle"></i> Код:</span>
-                <span class="value">{{ req.classification_code }}</span>
+                <span class="value">{{ req.repair_code|default:"-" }}</span> {# Отображаем код #}
             </div>
 
+            {# Блок с таймером или статусом завершения #}
             {% if req.status != 'done' and req.deadline %}
             <div class="task-info">
                 <span class="label"><i class="fas fa-clock"></i> Осталось:</span>
+                {# Передаем deadline в ISO формате для Luxon JS #}
                 <span class="value timer" data-deadline="{{ req.deadline.isoformat }}">
                     <i class="fas fa-hourglass-half"></i> <span class="time-value">Расчет...</span>
                 </span>
@@ -118,29 +157,37 @@
                   <span class="label"><i class="fas fa-check-circle"></i> Статус:</span>
                   <span class="value status-done-text">Ремонт завершен</span>
               </div>
+             {# Можете добавить сюда отображение времени завершения, если добавили такое поле в модель #}
              {% endif %}
 
+            {# Кнопки действий #}
             <div class="buttons">
-                <button class="btn btn-status-update" data-new-status="done" {% if req.status == 'done' %}disabled{% endif %}>
+                {# Добавляем data-request-id к каждой кнопке для делегирования событий #}
+                <button class="btn btn-status-update" data-new-status="done" data-request-id="{{ req.id }}" {% if req.status == 'done' %}disabled{% endif %}>
                     <i class="fas fa-check"></i> Выполнено
                 </button>
-                <button class="btn btn-status-update" data-new-status="assigned" {% if req.status == 'assigned' or req.status == 'done' %}disabled{% endif %}>
+                <button class="btn btn-status-update" data-new-status="assigned" data-request-id="{{ req.id }}" {% if req.status == 'assigned' or req.status == 'done' %}disabled{% endif %}>
                     <i class="fas fa-user-tag"></i> В наряд
                 </button>
-                 <button class="btn btn-status-update" data-new-status="urgent" {% if req.status == 'urgent' or req.status == 'done' %}disabled{% endif %}>
+                 <button class="btn btn-status-update" data-new-status="urgent" data-request-id="{{ req.id }}" {% if req.status == 'urgent' or req.status == 'done' %}disabled{% endif %}>
                     <i class="fas fa-star"></i> Срочно
                 </button>
-                <button class="btn btn-delete"><i class="fas fa-trash"></i></button>
-                <button class="btn btn-more"><i class="fas fa-ellipsis-h"></i></button>
+                {# Добавьте другие кнопки статусов, если нужно (например, отменить) #}
+
+                {# Кнопки Удалить и Подробнее (если реализованы) #}
+                <button class="btn btn-delete" data-request-id="{{ req.id }}"><i class="fas fa-trash"></i></button>
+                <button class="btn btn-more" data-request-id="{{ req.id }}"><i class="fas fa-ellipsis-h"></i></button>
             </div>
-        </div>
+        </div> {# Закрываем div task-card #}
         {% empty %}
+          {# Этот блок отобразится, если в списке requests нет ни одной заявки #}
           <p>Нет доступных заявок.</p>
-        {% endfor %}
-    </div>
-</div>
+        {% endfor %} {# Закрываем цикл for #}
+    </div> {# Закрываем div task-list #}
+</div> {# Закрываем div container #}
+
 
 <script src="{% static 'dispatcher/script.js' %}"></script>
 
 </body>
-</html>
+</html> 
