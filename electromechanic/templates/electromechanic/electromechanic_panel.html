@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Панель электромеханика - АС Заявочный ремонт</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" integrity="sha512-9usAa10IRO0HhonpyAIVpjrylPvoDwiPUiKdWk5t3PyolY1cOd4DSE0Ga+ri4AuTroPR5aQvXU9xC6qOPnzFeg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="{% static 'electromechanic/style.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/luxon@2.3.1/build/global/luxon.min.js"></script>
+</head>
+<body>
+<div class="container">
+    <header>
+        <div>
+            <h1>Панель электромеханика</h1>
+            <p style="margin-top: 10px;">АС Заявочный ремонт • Режим реального времени</p>
+        </div>
+        <div class="user-info">
+            <div style="text-align: right;">
+                <div class="user-name">{{ user.fio|default:"Неизвестный пользователь" }}</div>
+                <div class="user-role">{{ user.get_role_display|default:"Роль неизвестна" }}</div>
+            </div>
+            <div class="user-avatar">
+                <i class="fas fa-user"></i>
+            </div>
+        </div>
+    </header>
+
+    <div id="classification-modal" class="modal" style="display: none;">
+        <div class="modal-content">
+            <span class="close-button" onclick="closeClassificationModal()">&times;</span>
+            <h2>Уточнение неисправности заявки <span id="modal-request-id"></span></h2>
+            <div id="modal-request-details" style="margin-bottom: 15px; font-size: 0.9em; color: #555;">
+            </div>
+            <div id="modal-breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
+            </div>
+            <h3 id="modal-main-title">Выберите категорию для уточнения</h3>
+            <div id="modal-buttons" class="buttons-container" style="max-height: 300px; overflow-y: auto;">
+            </div>
+            <div id="modal-final-code" style="display:none; margin-top: 15px; font-weight: bold;">
+                Выбран код: <span id="modal-selected-code"></span>
+            </div>
+            <div class="modal-actions" style="margin-top: 20px; text-align: right;">
+                <button id="modal-submit-button" class="btn btn-primary" onclick="submitClassification()" disabled>Сохранить уточнение</button>
+                <button class="btn btn-secondary" onclick="closeClassificationModal()">Отмена</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="stats-container">
+        <div class="stat-card">
+            <div class="stat-title">Ожидают классификации</div>
+            <div class="stat-value">{{ stats.total_assigned|default:"0" }}</div>
+        </div>
+    </div>
+
+    <div class="controls">
+        <div class="search-container">
+            <i class="fas fa-search"></i>
+            <input type="text" id="search" placeholder="Поиск по поезду, вагону или описанию...">
+        </div>
+        <div class="filter-container">
+            <select id="filter">
+                <option value="all">Все заявки (ПЭМ)</option>
+                <option value="pending">Ожидают классификации</option>
+                <option value="classified">Классифицированы</option>
+            </select>
+        </div>
+    </div>
+
+    <div class="task-list" id="task-list">
+        {% for req in requests %}
+        <div class="task-card clickable"
+             data-status="{{ req.status }}"
+             data-request-id="{{ req.id }}"
+             data-created-at="{{ req.created_at.isoformat }}"
+             data-path-info="{{ req.path_info|escapejs }}"
+             data-repair-code="{{ req.repair_code|default:"" }}"
+             >
+
+            <div class="task-header">
+                <div class="task-title">Поезд: {{ req.train|default:"-" }} / Вагон: {{ req.wagon|default:"-" }}</div>
+                <div class="task-status status-{{ req.status }}">
+                    {{ req.get_status_display }}
+                </div>
+            </div>
+
+             <div class="task-info">
+                 <span class="label"><i class="fas fa-user"></i> Заявил:</span> <span class="value">{{ req.fio|default:"-" }} ({{ req.role|default:"?" }})</span>
+             </div>
+             <div class="task-info">
+                 <span class="label"><i class="fas fa-hashtag"></i> Табель:</span> <span class="value">{{ req.tabel|default:"-" }}</span>
+             </div>
+            <div class="task-info">
+                <span class="label"><i class="far fa-calendar-alt"></i> Дата создания:</span> <span class="value">{{ req.created_at|date:"d/m/Y H:i"|default:"-" }}</span>
+            </div>
+
+            {% if req.departure_city %}
+            <div class="task-info">
+                <span class="label"><i class="fas fa-city"></i> Город отпр.:</span> <span class="value">{{ req.departure_city }}</span>
+            </div>
+            {% endif %}
+
+             {% if req.departure_date %}
+             <div class="task-info">
+                 <span class="label"><i class="fas fa-calendar-alt"></i> Дата отпр.:</span> <span class="value">{{ req.departure_date|date:"d/m/Y" }}</span>
+             </div>
+             {% endif %}
+
+            <div class="task-info">
+                <span class="label"><i class="fas fa-train"></i> Поезд:</span> <span class="value">{{ req.train|default:"-" }}</span>
+            </div>
+             <div class="task-info">
+                <span class="label"><i class="fas fa-box"></i> Вагон:</span> <span class="value">{{ req.wagon|default:"-" }}</span>
+            </div>
+            {% if req.route %}
+            <div class="task-info">
+                <span class="label"><i class="fas fa-route"></i> Маршрут:</span> <span class="value">{{ req.route }}</span>
+            </div>
+            {% endif %}
+            {% if req.location %}
+            <div class="task-info">
+                <span class="label"><i class="fas fa-map-marker-alt"></i> Пункт:</span> <span class="value">{{ req.location }}</span>
+            </div>
+             {% endif %}
+
+             <div class="task-info">
+                 <span class="label"><i class="fas fa-wrench"></i> Первичная неиспр.:</span>
+                 <span class="value" title="{{ req.path_info|default:"-" }}">
+                     {{ req.fault_description|default:"-" }}
+                 </span>
+             </div>
+            <div class="task-info">
+                <span class="label"><i class="fas fa-exclamation-triangle"></i> Первичный код:</span> <span class="value">{{ req.repair_code|default:"Нет" }}</span>
+            </div>
+
+            {% if req.status == 'classified' %}
+                 <div class="task-info">
+                     <span class="label"><i class="fas fa-check-double"></i> Статус:</span>
+                     <span class="value status-classified-text">Классифицировано</span>
+                 </div>
+            {% elif req.status == 'completed' or req.status == 'done' %}
+              <div class="task-info">
+                  <span class="label"><i class="fas fa-check-circle"></i> Статус:</span>
+                  <span class="value status-done-text">Ремонт завершен</span>
+              </div>
+            {% endif %}
+
+            <div class="pem-click-hint">Кликните для классификации</div>
+
+        </div>
+        {% empty %}
+          <p>Нет доступных заявок.</p>
+        {% endfor %}
+    </div>
+</div>
+
+<script src="{% static 'electromechanic/script.js' %}"></script>
+
+</body>
+</html>

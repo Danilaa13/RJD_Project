@@ -418,11 +418,12 @@ function proceedAfterLogin() {
         // Если Диспетчер успешно авторизован, перенаправляем на страницу диспетчера
         alert("Авторизация Диспетчера успешна. Перенаправление...");
         window.location.href = '/dispatcher/'; // Убедитесь, что этот URL существует и работает
-        // Если страница диспетчера не отдельная, а является частью этого же интерфейса:
-        // showStep('main-content');
-        // document.getElementById("user-info").innerHTML = `...информация о диспетчере...`; // Обновите инфо блок
-        // renderButtons(currentRoleData); // Отрисуйте кнопки, специфичные для диспетчера
-    } else if (userData.role === "Проводник" || userData.role === "ПЭМ") {
+
+    } else if (userData.role === "ПЭМ") {
+        alert("Авторизация ПЭМ успешна. Перенаправление...");
+        window.location.href = '/pem-panel/';
+
+    } else if (userData.role === "Проводник") {
         // Проводнику и ПЭМ нужно ввести данные поезда/вагона после авторизации
         showStep('input-data');
         // Обновляем роль на экране ввода данных
@@ -537,32 +538,39 @@ function renderButtons(dataToRender, animate = true) {
 }
 
 // Определяем функцию отправки на верхнем уровне
-// Корректируем функцию sendRequestToServer
-async function sendRequestToServer(code) {
-    const url = '/api/request/save/'; // URL вашего urls.py
-    console.log("Отправка запроса с кодом:", code, "Путь:", path, "Данные пользователя:", userData);// Отладочный вывод
 
-     // Убедимся, что данные пользователя полны для отправки заявки
-     // Для Проводника/ПЭМ нужны поезд и вагон. Для других ролей может быть иначе.
-     // Добавим проверку только если это Проводник или ПЭМ
-      if ((userData.role === "Проводник" || userData.role === "ПЭМ") && (!userData.fio || !userData.tabel || !userData.departureCity || !userData.departureDate || !userData.train || !userData.wagon)) { // Добавлена проверка на departure_city
-          console.error("Недостаточно данных для отправки заявки (ФИО, Табель, Город, Дата, Поезд, Вагон).", userData);
-          alert("Ошибка: Недостаточно данных для отправки заявки. Пожалуйста, вернитесь и заполните все необходимые поля.");
-          // Остаемся на текущем экране с ошибкой
-          return;
-     }
+async function sendRequestToServer(code, targetRole) {
+    const url = '/api/request/save/';
+    console.log("Отправка запроса: Подготавливаемые данные:", { code, path, userData, targetRole }); // Логируем данные для отправки
+
+    // --- Проверка данных (оставляем как есть) ---
+    if (!userData || !userData.role || !userData.tabel || !userData.fio ||
+        !(path && Array.isArray(path) && path.length > 0) || !code || !targetRole) {
+        alert("Ошибка: Недостаточно данных для отправки заявки (пользователь/путь/код/адресат).");
+        console.error("sendRequestToServer: Не хватает обязательных данных", { userData, path, code, targetRole });
+        return;
+    }
+    // Проверка данных рейса (оставляем как есть)
+    if ((userData.role === 'Проводник' || userData.role === 'ПЭМ') &&
+        (!userData.departureCity || !userData.departureDate || !userData.train || !userData.wagon)) {
+        alert("Ошибка: Недостаточно данных рейса для отправки заявки.");
+        console.error("sendRequestToServer: Не хватает данных рейса", userData);
+        return;
+    }
+    // --- Конец проверки данных ---
 
 
-    // Собираем данные для отправки
     const dataToSend = {
-        // Отправляем полные данные пользователя, которые были собраны после логина и ввода поезда/вагона
         userData: userData,
-        path: path,         // Массив строк - путь навигации
-        code: code          // Финальный код неисправности
+        path: path,
+        code: code,
+        targetRole: targetRole
     };
 
-    // --- Получение CSRF токена (ВАЖНО для безопасности!) ---
-    function getCookie(name) { /* ... ваш существующий код получения куки ... */
+    // --- ВОТ ЗДЕСЬ ДОЛЖНЫ НАХОДИТЬСЯ ПРАВИЛЬНОЕ ОПРЕДЕЛЕНИЕ ФУНКЦИИ getCookie
+    // И ПРАВИЛЬНЫЙ ВЫЗОВ ДЛЯ ПОЛУЧЕНИЯ csrftoken ---
+    // Этот код выполняется КАЖДЫЙ РАЗ при вызове sendRequestToServer
+    function getCookie(name) {
         let cookieValue = null;
         if (document.cookie && document.cookie !== '') {
             const cookies = document.cookie.split(';');
@@ -575,45 +583,56 @@ async function sendRequestToServer(code) {
             }
         }
         return cookieValue;
-    }
-    const csrftoken = getCookie('csrftoken');
-    // --------------------------------------------------------
+    } // <-- ПРАВИЛЬНАЯ ЗАКРЫВАЮЩАЯ СКОБКА ЗДЕСЬ
+
+
+    const csrftoken = getCookie('csrftoken'); // <-- ПРАВИЛЬНЫЙ ВЫЗОВ getCookie ВНУТРИ sendRequestToServer
+
+    // --- Конец блока получения токена ---
+
 
     if (!csrftoken) {
-        console.warn("CSRF token not found. Request might fail if CSRF protection is enabled.");
-        alert("Ошибка безопасности (CSRF). Попробуйте обновить страницу.");
-        return;
+         alert("Ошибка безопасности (CSRF). Не удалось получить токен. Попробуйте обновить страницу.");
+         console.error("CSRF token не найден.");
+         return;
     }
 
+    console.log("sendRequestToServer: CSRF токен получен. Выполняется fetch...");
 
+    // --- Блок fetch, try...catch и обработка ответа (остается как есть) ---
     try {
         const response = await fetch(url, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'X-CSRFToken': csrftoken // Добавляем токен
+                'X-CSRFToken': csrftoken
             },
             body: JSON.stringify(dataToSend)
         });
 
+        console.log("sendRequestToServer: fetch запрос завершен. Статус ответа:", response.status);
+
         const result = await response.json();
 
+        console.log("sendRequestToServer: Получен JSON ответ:", result);
+
         if (response.ok && result.status === 'success') {
-            alert(`Заявка (${code}) успешно отправлена!`);
-            // После успешной отправки заявки, возможно, сбросим выбор неисправности
-            path = [];
-            renderButtons(currentRoleData); // Вернуться к началу выбора неисправностей
+            alert(result.message || `Заявка (${code}) успешно отправлена!`);
+            // ... (логика после успешной отправки) ...
+             path = [];
+             renderButtons(allData[userData.role]);
+
         } else {
-             // Если есть ошибка на сервере (например, валидация данных заявки)
+             // Если ответ не OK (4xx, 5xx) или статус в JSON не 'success'
             alert(`Ошибка отправки заявки: ${result.message || response.statusText || 'Неизвестная ошибка'}`);
+            console.error("sendRequestToServer: Ошибка сервера или API:", response.status, result);
         }
     } catch (error) {
-        console.error('Ошибка сети или отправки:', error);
-        alert('Произошла ошибка при отправке данных. Проверьте консоль.');
+        console.error('sendRequestToServer: КРИТИЧЕСКАЯ ОШИБКА в fetch или парсинге JSON:', error);
+        alert('Произошла критическая ошибка при отправке данных. Проверьте консоль.');
     }
+    // --- Конец блока fetch ---
 }
-
-
 
 
 
@@ -656,14 +675,24 @@ function updateButtonsContent(buttonsDiv, currentLevelData) {
         buttonsDiv.appendChild(codeElement);
 
         // Добавляем кнопку "Отправить заявку"
-        const submitButton = document.createElement("button");
-        submitButton.textContent = "Отправить заявку";
-        submitButton.classList.add("submit-request-btn");
-        submitButton.onclick = () => {
-            // Вызываем ГЛОБАЛЬНУЮ функцию отправки данных
-            sendRequestToServer(currentLevelData);
+        const submitToPdkButton = document.createElement("button");
+        submitToPdkButton.textContent = "Отправить Диспетчеру (ПДК)";
+        submitToPdkButton.classList.add("submit-request-btn"); // Можно использовать тот же или другой стиль
+        submitToPdkButton.onclick = () => {
+            // Вызываем отправку, передавая код и роль ПДК
+            sendRequestToServer(currentLevelData, 'ПДК'); // 'ПДК' - значение из UserRole.DISPATCHER
         };
-        buttonsDiv.appendChild(submitButton);
+        buttonsDiv.appendChild(submitToPdkButton);
+
+        const submitToPemButton = document.createElement("button");
+        submitToPemButton.textContent = "Отправить Электромеханику (ПЭМ)";
+        submitToPemButton.classList.add("submit-request-btn"); // Можно использовать тот же или другой стиль
+        submitToPemButton.style.marginLeft = '10px'; // Небольшой отступ
+        submitToPemButton.onclick = () => {
+            // Вызываем отправку, передавая код и роль ПЭМ
+            sendRequestToServer(currentLevelData, 'ПЭМ'); // 'ПЭМ' - значение из UserRole.PEM
+        };
+        buttonsDiv.appendChild(submitToPemButton);
 
         // Кнопка "Выбрать другую"
         const resetButton = document.createElement("button");

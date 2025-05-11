@@ -17,9 +17,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from dispatcher.views import get_latest_requests_view
-from main.views import welcome_screen, save_request_view, dispatcher_panel_view, update_request_status_view
+from dispatcher.views import get_latest_requests_view, delete_request_view
+from electromechanic.views import pem_panel_view, get_pem_requests_view, classify_request_view
+from main.views import welcome_screen, save_request_view, update_request_status_view
 from users.views import register_view, login_view, logout_view, check_auth_view
+from dispatcher.views import dispatcher_panel_view
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,12 +36,18 @@ urlpatterns = [
 
     # Доп. URL для обновления статуса заявки (пример)
     path('api/request/<int:pk>/update_status/', update_request_status_view, name='update_request_status_api'),
+    path('api/request/<int:pk>/delete/', delete_request_view, name='delete_request'),
     path('api/requests/latest/', get_latest_requests_view, name='api_get_latest_requests'),
 
     path('api/register/', register_view, name='api_register'),
     path('api/login/', login_view, name='api_login'),
     path('api/logout/', logout_view, name='api_logout'),
     path('api/check_auth/', check_auth_view, name='api_check_auth'),
+
+# Страница панели ПЭМ
+    path('pem-panel/', pem_panel_view, name='pem_panel'),
+    path('api/requests/pem/', get_pem_requests_view, name='get_pem_requests'),
+    path('api/request/<int:pk>/classify/', classify_request_view, name='classify_request'),
 ]
 
 

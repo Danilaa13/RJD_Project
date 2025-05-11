@@ -82,7 +82,6 @@ function filterTasks() {
 
     taskListElement.querySelectorAll('.task-card').forEach(card => {
         // Проверяем текст ИЛИ данные в атрибутах для поиска
-        // Добавим проверку новых полей в поиск
         const fio = card.querySelector('.task-title')?.textContent.toLowerCase() || '';
         const tabel = card.querySelector('.fa-hashtag')?.nextElementSibling?.textContent.toLowerCase() || ''; // Поле Табельный номер
         const city = card.querySelector('.fa-city')?.nextElementSibling?.textContent.toLowerCase() || ''; // Поле Город отпр.
@@ -207,6 +206,8 @@ function renderRequestCard(requestData) {
     card.dataset.requestId = requestData.id;
     card.dataset.createdAt = requestData.created_at; // Сохраняем время создания в ISO формате
 
+    card.dataset.classifiedByFio = requestData.classified_by_fio || '';
+    card.dataset.classifiedAt = requestData.classified_at || '';
 
     let cardHTML = `
         <div class="task-header">
@@ -451,32 +452,94 @@ document.addEventListener('DOMContentLoaded', () => {
 
 
     // Применяем обработчики событий клика кнопок через делегирование
-    if(taskListElement) {
-        taskListElement.addEventListener('click', async (event) => {
-            // Ищем ближайшую кнопку с классом btn-status-update
-            const button = event.target.closest('.btn-status-update');
-            if (!button) return; // Клик не по кнопке смены статуса
+    if (taskListElement) {
+    taskListElement.addEventListener('click', async (event) => {
+        const deleteButton = event.target.closest('.btn-delete');
+        const statusButton = event.target.closest('.btn-status-update');
 
-            const card = button.closest('.task-card');
-            const requestId = card.dataset.requestId;
-            const newStatus = button.dataset.newStatus;
-
-            if (!requestId || !newStatus) {
-                 console.warn("Не удалось получить ID заявки или новый статус из data-атрибутов.");
-                 return;
+        // --- Логика для кнопки УДАЛЕНИЯ ---
+        if (deleteButton) {
+            if (!confirm("Вы уверены, что хотите удалить эту заявку?")) {
+                return;
             }
 
-            const url = `/api/request/${requestId}/update_status/`; // URL для обновления статуса
+            const card = deleteButton.closest('.task-card');
+            const requestId = card.dataset.requestId;
 
-            const csrftoken = getCookie('csrftoken'); // Получаем CSRF токен
+            if (!requestId || requestId === 'unknown') {
+                console.warn("Не удалось получить ID заявки для удаления.");
+                alert("Ошибка: Не удалось определить ID заявки для удаления.");
+                return;
+            }
+
+            const url = `/api/request/${requestId}/delete/`;
+            const csrftoken = getCookie('csrftoken');
+
+            if (!csrftoken) {
+                alert("Ошибка безопасности (CSRF). Попробуйте обновить страницу.");
+                return;
+            }
 
             try {
-                 button.disabled = true; // Блокируем кнопку на время запроса
-                 const response = await fetch(url, {
+                deleteButton.disabled = true;
+                const response = await fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'X-CSRFToken': csrftoken,
+                    },
+                });
+
+                if (response.headers.get('content-type')?.includes('application/json')) {
+                    const result = await response.json();
+
+                    if (response.ok && result.status === 'success') {
+                        console.log(`Заявка ${requestId} успешно удалена.`);
+                        card.remove();
+                    } else {
+                        alert(`Ошибка удаления заявки: ${result.message || response.statusText || 'Неизвестная ошибка сервера.'}`);
+                        console.error(`Ошибка API при удалении заявки ${requestId}:`, response.status, result);
+                        deleteButton.disabled = false;
+                    }
+                } else {
+                    const errorText = await response.text();
+                    alert(`Ошибка сервера при удалении заявки ${requestId}: ${response.status} ${response.statusText}`);
+                    console.error(`Сервер вернул не-JSON ответ при удалении заявки ${requestId}:`, response.status, response.statusText, errorText);
+                    deleteButton.disabled = false;
+                }
+
+            } catch (error) {
+                console.error(`Сетевая ошибка при удалении заявки ${requestId}:`, error);
+                alert('Произошла сетевая ошибка при удалении заявки. Проверьте соединение.');
+                deleteButton.disabled = false;
+            }
+        }
+
+        // --- Логика для кнопки СМЕНЫ СТАТУСА ---
+        if (statusButton) {
+            const card = statusButton.closest('.task-card');
+            const requestId = card.dataset.requestId;
+            const newStatus = statusButton.dataset.newStatus;
+
+            if (!requestId || !newStatus) {
+                console.warn("Не удалось получить ID заявки или новый статус из data-атрибутов кнопки.");
+                alert("Ошибка: Не удалось определить ID заявки или новый статус.");
+                return;
+            }
+
+            const url = `/api/request/${requestId}/update_status/`;
+            const csrftoken = getCookie('csrftoken');
+            if (!csrftoken) {
+                alert("Ошибка безопасности (CSRF). Попробуйте обновить страницу.");
+                return;
+            }
+
+            try {
+                statusButton.disabled = true;
+                const response = await fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
-                        ...(csrftoken && {'X-CSRFToken': csrftoken})
+                        'X-CSRFToken': csrftoken,
                     },
                     body: JSON.stringify({ status: newStatus })
                 });
@@ -486,83 +549,94 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (response.ok && result.status === 'success') {
                     console.log(`Статус заявки ${requestId} успешно обновлен на ${newStatus}.`);
 
-                    // Обновляем статус на карточке БЕЗ перезагрузки страницы
-                    card.dataset.status = newStatus; // Обновляем data-атрибут
-                    // Обновляем текст статуса
-                    const statusTextMap = { 'new': 'Новая', 'assigned': 'В наряде', 'done': 'Выполнено', 'urgent': 'Срочная', 'cancelled': 'Отменена' }; // Добавьте все статусы
+                    card.dataset.status = newStatus;
+
+                    const statusTextMap = {
+                        'pending': 'В ожидании',
+                        'assigned': 'В наряде',
+                        'in_progress': 'В работе',
+                        'classified': 'Классифицирована',
+                        'completed': 'Выполнена',
+                        'cancelled': 'Отменена',
+                    };
                     const statusElement = card.querySelector('.task-status');
-                    if(statusElement) {
+                    if (statusElement) {
                         statusElement.textContent = statusTextMap[newStatus] || newStatus;
-                        // Обновляем класс для цвета
                         statusElement.className = `task-status status-${newStatus}`;
                     }
 
-                    // Пере-блокируем/разблокируем кнопки на карточке
+                    // --- Логика пере-блокировки/разблокировки кнопок ---
                     card.querySelectorAll('.btn-status-update').forEach(btn => {
-                         const btnStatus = btn.dataset.newStatus;
-                         // Простая логика блокировки: Выполнено блокирует все.
-                         // В работе блокирует "Новая". Срочная блокирует "Новая".
-                         btn.disabled = (newStatus === 'done') || (newStatus === 'assigned' && btnStatus === 'new') || (newStatus === 'urgent' && btnStatus === 'new');
-                         // Разблокируем, если новый статус не тот, который должен быть заблокирован
-                         if (!btn.disabled) {
-                             btn.disabled = false;
-                         }
-                         // Отдельно разблокируем "В наряд" если статус стал "Новая" или "Срочная"
-                         if ((newStatus === 'new' || newStatus === 'urgent') && btnStatus === 'assigned') {
-                             btn.disabled = false;
-                         }
-                          // Если статус стал "В наряд", разблокируем "Выполнено" и "Срочно"
-                          if (newStatus === 'assigned' && (btnStatus === 'done' || btnStatus === 'urgent')) {
-                               btn.disabled = false; // Это уже обрабатывается первой частью условия, но для ясности
-                          }
-                          // Если статус стал "Срочная", разблокируем "В наряд" и "Выполнено"
-                           if (newStatus === 'urgent' && (btnStatus === 'assigned' || btnStatus === 'done')) {
-                                btn.disabled = false; // Это уже обрабатывается первой частью условия, но для ясности
-                           }
-                    });
+                        const btnTargetStatus = btn.dataset.newStatus;
 
-                     // Если статус 'done', убираем таймер или меняем его текст
+                        btn.disabled = false; // По умолчанию разблокируем
+
+                        // Блокируем кнопку, если ее целевой статус совпадает с новым
+                        if (btnTargetStatus === newStatus) {
+                            btn.disabled = true;
+                        }
+
+                        // Дополнительная логика блокировки в зависимости от нового статуса
+                        if (newStatus === 'completed' || newStatus === 'cancelled') {
+                            btn.disabled = true; // Блокируем все при завершении/отмене
+                        } else if (newStatus === 'assigned') {
+                            if (btnTargetStatus === 'pending') {
+                                btn.disabled = true; // Из assigned нельзя перевести в pending
+                            }
+                        } else if (newStatus === 'in_progress') {
+                            if (btnTargetStatus === 'pending' || btnTargetStatus === 'assigned') {
+                                btn.disabled = true; // Из in_progress нельзя в pending/assigned
+                            }
+                        } else if (newStatus === 'classified') {
+                            if (btnTargetStatus === 'pending') {
+                                btn.disabled = true; // Из classified нельзя в pending
+                            }
+                        }
+                        // Добавьте логику для других статусов, если нужно (e.g., из pending нельзя в assigned без классификации?)
+                        // Текущая логика позволит из pending перейти в assigned, classified, urgent
+                        // Из assigned можно в in_progress, completed, cancelled, urgent
+                        // Из classified можно в assigned, in_progress, completed, cancelled, urgent
+                    });
+                    // --- Конец логики пере-блокировки ---
+
+
+                    // Если статус 'completed', убираем таймер или меняем его текст
                     const timerElement = card.querySelector('.timer');
-                    if (newStatus === 'done' && timerElement) {
-                         // Заменяем блок таймера на текст о завершении
-                         timerElement.closest('.task-info').innerHTML = `<span class="label"><i class="fas fa-check-circle"></i> Статус:</span><span class="value status-done-text">Ремонт завершен</span>`;
-                     } else if (newStatus !== 'done' && !card.querySelector('.timer') && card.dataset.deadline) {
-                         // Если статус вернулся с 'done' и есть deadline, возможно, нужно восстановить таймер
-                         // Это сложнее, может потребоваться получение свежих данных для этой карточки
-                         // Или просто перезагрузка страницы для этой карточки.
+                    if (newStatus === 'completed' && timerElement) {
+                        timerElement.closest('.task-info').innerHTML = `<span class="label"><i class="fas fa-check-circle"></i> Статус:</span><span class="value status-completed-text">Выполнена</span>`;
+                    } else if (newStatus !== 'completed' && !card.querySelector('.timer') && card.dataset.deadline) {
+                         // Логика восстановления таймера, если статус вернулся с завершенного, сложна и требует доп. данных
+                         // Сейчас просто игнорируем этот случай или предлагаем обновить страницу.
                      }
 
-
-                    // Обновить счетчики статистики (опционально, требует доп. логики на фронтенде или запроса к бэкенду)
-                    // filterTasks(); // Применить фильтр заново, если нужно скрыть/показать карточку
-
-                     // Можно показать всплывающее уведомление об успехе
-                     // alert(result.message);
-
                 } else {
-                     alert(`Ошибка обновления статуса: ${result.message || 'Неизвестная ошибка'}`);
-                     button.disabled = false; // Разблокируем кнопку при ошибке
+                    alert(`Ошибка обновления статуса: ${result.message || response.statusText || 'Неизвестная ошибка'}`);
+                    console.error(`Ошибка API при обновлении статуса ${requestId} на ${newStatus}:`, response.status, result);
+                    statusButton.disabled = false; // Используем statusButton
                 }
 
             } catch (error) {
-                console.error('Ошибка сети при обновлении статуса:', error);
-                alert('Произошла ошибка при обновлении статуса. Проверьте соединение.');
-                button.disabled = false; // Разблокируем кнопку при ошибке сети
+                console.error(`Сетевая ошибка при обновлении статуса ${requestId} на ${newStatus}:`, error);
+                alert('Произошла сетевая ошибка при обновлении статуса. Проверьте соединение.');
+                statusButton.disabled = false; // Используем statusButton
             }
-        });
+        }
 
-         // Optional: Add delegation for mouseenter/mouseleave for hover effects
-         // taskListElement.addEventListener('mouseenter', (event) => { /* ... */ }, true); // Use capture phase
-         // taskListElement.addEventListener('mouseleave', (event) => { /* ... */ }, true); // Use capture phase
+         // --- Логика для кнопки "Подробнее" (если есть) ---
+         const moreButton = event.target.closest('.btn-more');
+         if (moreButton) {
+              const card = moreButton.closest('.task-card');
+              const requestId = card.dataset.requestId;
+              console.log(`Нажата кнопка "Подробнее" для заявки ID: ${requestId}`);
+              alert(`Функция "Подробнее" для заявки ${requestId} пока не реализована.`);
+              // Здесь может быть вызов openDetailsModal(requestId);
+         }
 
-         // Optional: Add delegation for mousedown/mouseup for button press effects
-         // taskListElement.addEventListener('mousedown', (event) => { /* ... */ });
-         // taskListElement.addEventListener('mouseup', (event) => { /* ... */ });
 
-
-    } else {
-        console.error("Элемент #task-list не найден!");
-    }
+    });
+} else {
+    console.error("Элемент #task-list не найден в DOM.");
+}
 
 
     // Запускаем обновление таймеров для всех карточек (включая изначально загруженные)

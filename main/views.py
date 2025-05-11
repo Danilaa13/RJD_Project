@@ -7,10 +7,18 @@ from django.views.decorators.csrf import csrf_exempt # Временно для �
 from django.views.decorators.csrf import csrf_protect
 from django.utils import timezone
 
+from users.models import UserRole
 from .models import RepairRequest, CustomUser, RequestStatus
 
 
 def welcome_screen(request):
+
+    # if request.user.is_authenticated:
+    #     if request.user.role == UserRole.DISPATCHER:
+    #         return redirect('dispatcher_panel')
+    #     elif request.user.role == UserRole.PEM:
+    #         return redirect('pem_panel')
+
     return render(request, 'main/index.html')
 
 
@@ -24,137 +32,160 @@ def save_request_view(request):
         # Получаем JSON данные из тела запроса
         data = json.loads(request.body)
 
-        # Извлекаем необходимые данные
-        user_data = data.get('userData', {}) # Получаем вложенный объект userData
+        # Извлекаем необходимые данные из тела запроса, которые приходят с ФРОНТЕНДА
+        # Данные о рейсе, выбранный адресат (ПЭМ/ПДК) и данные о неисправности приходят с формы Проводника/ПЭМ
         path = data.get('path', [])
         code = data.get('code')
-        role = user_data.get('role') # Извлекаем role из userData
-        tabel = user_data.get('tabel') # Извлекаем tabel из userData
-        fio = user_data.get('fio') # Извлекаем fio из userData
+        target_role = data.get('targetRole')  # Получаем выбранного адресата
 
-        departure_city = user_data.get('departureCity')
-        departure_date = user_data.get('departureDate')
-        train = user_data.get('train')
-        wagon = user_data.get('wagon')
-        final_item = path[-1] if path else 'Не указано'  # Последний элемент пути
+        # Данные пользователя, которые были собраны на фронтенде (ФИО, Табель, Город, Дата отправления, Поезд, Вагон)
+        # ВАЖНО: ЭТИ ДАННЫЕ НУЖНЫ В ОСНОВНОМ ДЛЯ ПЕРЕДАЧИ, НО КТО СОЗДАЛ ЗАЯВКУ - БЕРЕТСЯ ИЗ request.user
+        user_data_from_frontend = data.get('userData', {})
 
+        departure_city = user_data_from_frontend.get('departureCity')
+        departure_date_str = user_data_from_frontend.get('departureDate')  # Получаем как строку
+        train = user_data_from_frontend.get('train')
+        wagon = user_data_from_frontend.get('wagon')
 
-        # Проверяем наличие обязательных данных пользователя
-        if not all([role, tabel, fio, path, code]):
-            # Добавим более конкретное сообщение, что именно не хватает
+        # Получаем данные о создателе заявки из request.user (ТРЕБУЕТ @login_required!)
+        if not request.user.is_authenticated:
+            return JsonResponse({"status": "error", "message": "Пользователь не авторизован."}, status=401)
+
+        creator_user = request.user  # Получаем объект авторизованного пользователя
+        creator_role = creator_user.role  # Его текущая роль
+        creator_tabel = creator_user.tabel  # Его табельный номер
+        creator_fio = creator_user.fio  # Его ФИО
+
+        # Проверяем наличие ОБЯЗАТЕЛЬНЫХ данных для ЛЮБОЙ заявки
+        if not all([path, code, target_role]):  # Проверяем путь, код и АДРЕСАТА
             missing_fields = []
-            if not role: missing_fields.append('role')
-            if not tabel: missing_fields.append('tabel')
-            if not fio: missing_fields.append('fio')
             if not path: missing_fields.append('path')
             if not code: missing_fields.append('code')
+            if not target_role: missing_fields.append('targetRole')
             return JsonResponse({"status": "error",
                                  "message": f"Неполные основные данные заявки. Отсутствуют поля: {', '.join(missing_fields)}"},
                                 status=400)
 
-            # Проверка наличия обязательных полей рейса для конкретных ролей
+        # Проверяем наличие ОБЯЗАТЕЛЬНЫХ полей рейса для конкретных ролей (Проводник, ПЭМ)
         departure_date_obj = None
-        if role in ['Проводник', 'ПЭМ']:
-
-            if not all([departure_city, departure_date, train, wagon]):
+        # Проверяем роль СОЗДАТЕЛЯ (creator_role), а не role из user_data_from_frontend
+        if creator_role in [UserRole.CONDUCTOR, UserRole.PEM]:  # Используйте константы из UserRole
+            if not all([departure_city, departure_date_str, train, wagon]):
                 return JsonResponse({"status": "error",
-                                     "message": f"Для роли '{role}' обязательны город отправления, дата отправления, поезд и вагон."},
+                                     "message": f"Для роли '{creator_role}' обязательны город отправления, дата отправления, поезд и вагон."},
                                     status=400)
-            # Валидация формата даты
+            # Валидация формата даты и преобразование в объект date
             try:
-                departure_date_obj = datetime.strptime(departure_date, '%Y-%m-%d').date()
+                # Используем departure_date_str, полученный с фронтенда
+                departure_date_obj = datetime.strptime(departure_date_str, '%Y-%m-%d').date()
             except (ValueError, TypeError):
                 return JsonResponse(
                     {"status": "error", "message": "Неверный формат даты отправления (ожидается ГГГГ-ММ-ДД)."},
                     status=400)
         else:
-            # Для других ролей данные рейса не обязательны, убеждаемся, что они None
+            # Для других ролей данные рейса не обязательны
             departure_city = None
             train = None
             wagon = None
+            departure_date_obj = None  # Убедимся, что date_obj тоже None
 
-        if not isinstance(path, list) or not code:
+        # Валидация формата пути и кода
+        if not isinstance(path, list) or not isinstance(code,
+                                                        str) or not code:  # Проверяем, что код - строка и не пустая
             return JsonResponse({"status": "error", "message": "Неверный формат пути или кода неисправности."},
                                 status=400)
 
-        try:
-            user_instance = None
-            if tabel and role:
-                try:
-                    user_instance = CustomUser.objects.get(tabel=tabel, role=role)
-                except CustomUser.DoesNotExist:
-                    print(f"WARNING: Пользователь с табелем {tabel} и ролью {role} не найден в БД для привязки заявки.")
+        # Определяем начальный статус заявки на основе выбранного адресата (target_role)
+        initial_status = RequestStatus.PENDING  # По умолчанию
+        if target_role == UserRole.PEM:  # Если адресована ПЭМ (нужно обогащение)
+            initial_status = RequestStatus.PENDING  # Используем PENDING как "ожидает обогащения"
+        elif target_role == UserRole.DISPATCHER:  # Если адресована Диспетчеру (значит, считается обогащенной)
+            initial_status = RequestStatus.CLASSIFIED  # Используем CLASSIFIED как "обогащена, готова для Диспетчера"
+        # Добавьте логику для других target_role, если они возможны (например, Ревизор)
 
-        # Создаем новую запись заявки
-            request_instance = RepairRequest.objects.create(
-                user=user_instance,
-                role=role,
-                tabel=tabel,
-                fio=fio,
-                departure_city=departure_city,
-                departure_date=departure_date_obj,
-                train=train,
-                wagon=wagon,
-                path_info=json.dumps(path),
-                fault_description=final_item,
-                repair_code=code,
-                status=RequestStatus.PENDING
-            )
+        # Генерируем initial_description из последнего элемента пути, если path не пустой
+        final_item_desc = path[-1] if path else 'Не указано'
 
-            request_instance.save()
+        # Создаем новую запись заявки в базе данных
+        # Используем creator_user для поля user
+        # Используем creator_role, creator_tabel, creator_fio из request.user
+        # Используем target_role, полученный из запроса
+        # Используем initial_status, определенный выше
+        # Используем departure_date_obj (объект Date)
+        request_instance = RepairRequest.objects.create(
+            user=creator_user,  # <-- Привязываем объект пользователя
+            role=creator_role,  # <-- Роль создателя берем из request.user
+            tabel=creator_tabel,  # <-- Табель создателя берем из request.user
+            fio=creator_fio,  # <-- ФИО создателя берем из request.user
 
-            # Отправляем успешный ответ
-            return JsonResponse({"status": "success", "message": f"Заявка {request_instance.pk} успешно принята.",
-                                 "request_id": request_instance.pk}, status=201)
+            departure_city=departure_city,
+            departure_date=departure_date_obj,  # <-- Сохраняем как Date объект
+            train=train,
+            wagon=wagon,
 
-        except Exception as e:
-            print(f"Ошибка при сохранении заявки в БД: {e}")
-            return JsonResponse({"status": "error", "message": "Произошла ошибка при сохранении заявки в базу данных."},
-                                status=500)
+            target_role=target_role,  # <-- СОХРАНЯЕМ ВЫБРАННОГО АДРЕСАТА
+
+            path_info=json.dumps(path),  # <-- Сохраняем путь как JSON строку
+            # fault_description: Это property в вашей модели, оно будет генерироваться
+            initial_description=final_item_desc,  # <-- Сохраняем последний элемент пути как первичное описание
+
+            repair_code=code,  # <-- Сохраняем код неисправности
+            status=initial_status,  # <-- Устанавливаем статус в зависимости от адресата
+
+            # created_at и updated_at заполнятся автоматически при использовании create()
+        )
+
+        # request_instance.save() # create() уже сохраняет, эта строка не нужна
+
+        # Отправляем успешный ответ
+        return JsonResponse({"status": "success", "message": f"Заявка {request_instance.pk} успешно принята.",
+                             "request_id": request_instance.pk}, status=201)
 
     except json.JSONDecodeError:
-        return JsonResponse({"status": "error", "message": "Неверный формат JSON в теле запроса."}, status=400)
+        print("Ошибка: Неверный формат JSON в теле запроса.")
+        return JsonResponse({"status": "error", "message": "Неверный формат данных заявки (ожидается JSON)."},
+                            status=400)
 
     except Exception as e:
-        print(f"Неожиданная ошибка в save_repair_request_view: {e}")
-        return JsonResponse({"status": "error", "message": "Произошла внутренняя ошибка сервера при обработке запроса."},
-                            status=500)
-
-
-def dispatcher_panel_view(request):
-    # Получаем все заявки (или фильтруем по необходимости)
-    # Для примера возьмем все, отсортированные по умолчанию (новые сверху)
-    all_requests = RepairRequest.objects.all()
-
-    # Подсчет статистики (простой пример)
-    stats = {
-        'total': all_requests.count(),
-        'in_progress': all_requests.filter(status='assigned').count(),
-        'done': all_requests.filter(status='done').count(),
-        'urgent': all_requests.filter(status='urgent').count(),
-        # Можно добавить расчет изменений % за день, но это сложнее
-    }
-
-    context = {
-        'requests': all_requests,
-        'stats': stats,
-        'current_time_iso': timezone.now().isoformat() # Для JS таймеров
-    }
-    return render(request, 'dispatcher/dispatcher_panel.html', context) # Укажите путь к шаблону панели
+        # Ловим другие возможные ошибки (например, ошибки БД при сохранении)
+        print(f"Неожиданная ошибка в save_request_view: {e}",
+              exc_info=True)  # exc_info=True для полной трассировки в логах
+        return JsonResponse(
+            {"status": "error", "message": "Произошла внутренняя ошибка сервера при обработке запроса."},
+            status=500)
 
 
 
-# Пример View для обновления статуса (вызывается кнопками на панели)
-# @csrf_exempt # Опять же, временно
+@csrf_protect
 @require_POST
 def update_request_status_view(request, pk):
+
+
+    if not request.user.is_authenticated:
+        return JsonResponse({"status": "error", "message": "Пользователь не авторизован."}, status=401)
+
+
+    if request.user.role not in [UserRole.DISPATCHER, UserRole.ADMIN]:
+        return JsonResponse({"status": "error", "message": "Недостаточно прав для смены статуса."}, status=403)
+
     try:
         repair_request = get_object_or_404(RepairRequest, pk=pk)
         data = json.loads(request.body)
         new_status = data.get('status')
 
-        # Проверяем, допустим ли новый статус
-        valid_statuses = [choice[0] for choice in RepairRequest.STATUS_CHOICES]
+        print(f"--- Debug Update Status ---")
+        print(f"Request PK: {pk}")
+        print(f"Received new_status: '{new_status}' (Type: {type(new_status)})")
+        valid_statuses = list(RequestStatus.values)
+        print(f"Valid statuses from RequestStatus.values: {valid_statuses}")
+        print(f"Is received status in valid statuses? {new_status in valid_statuses}")
+        print(f"--- End Debug ---")
+
+        if new_status not in valid_statuses:
+            print("DEBUG: Invalid status condition met.")  # Добавим принт и здесь
+            return JsonResponse({'status': 'error', 'message': 'Недопустимый статус.'}, status=400)
+
+        valid_statuses = list(RequestStatus.values)
         if new_status not in valid_statuses:
             return JsonResponse({'status': 'error', 'message': 'Недопустимый статус.'}, status=400)
 
@@ -166,6 +197,10 @@ def update_request_status_view(request, pk):
 
     except RepairRequest.DoesNotExist:
          return JsonResponse({'status': 'error', 'message': 'Заявка не найдена.'}, status=404)
+
+    except json.JSONDecodeError:
+        return JsonResponse({'status': 'error', 'message': 'Неверный формат JSON в запросе.'}, status=400)
+
     except Exception as e:
          print(f"Error updating status for request {pk}: {e}")
          return JsonResponse({'status': 'error', 'message': f'Внутренняя ошибка сервера: {e}'}, status=500)

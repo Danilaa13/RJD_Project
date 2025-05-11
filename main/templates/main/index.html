@@ -9,6 +9,7 @@
 </head>
 <body>
 
+
 <div class="container">
 
     <div id="welcome-screen">
@@ -101,6 +102,7 @@
 
 </div>
 
+<form method="post" style="display:none;">{% csrf_token %}</form>
 <script src="{% static 'main/script.js' %}"></script>
 
 </body>

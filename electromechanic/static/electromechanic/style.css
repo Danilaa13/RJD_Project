@@ -1,0 +1,479 @@
+/* electromechanic/static/electromechanic/style.css */
+
+/* Общие стили для тела страницы и контейнера */
+body {
+    font-family: 'Arial', sans-serif;
+    line-height: 1.6;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+.container {
+    width: 90%;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #fff;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+/* Стили для шапки */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+}
+
+header h1 {
+    margin: 0;
+    color: #003366; /* Пример корпоративного цвета */
+}
+
+header p {
+    margin: 5px 0 0 0;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+}
+
+.user-name {
+    font-weight: bold;
+    color: #0056b3;
+}
+
+.user-role {
+    font-size: 0.9em;
+    color: #555;
+}
+
+.user-avatar {
+    font-size: 2em;
+    margin-left: 15px;
+    color: #003366;
+}
+
+/* Стили для статистики */
+.stats-container {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap; /* Для адаптивности */
+}
+
+.stat-card {
+    background-color: #e9ecef;
+    padding: 15px;
+    border-radius: 5px;
+    text-align: center;
+    min-width: 120px; /* Минимальная ширина карточки */
+    margin: 5px; /* Отступы между карточками */
+    flex-grow: 1; /* Растягиваться по возможности */
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.stat-title {
+    font-size: 0.9em;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+.stat-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    color: #003366;
+}
+
+/* Стили для элементов управления (поиск, фильтр) */
+.controls {
+    display: flex;
+    gap: 15px; /* Расстояние между элементами */
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+.search-container, .filter-container {
+    display: flex;
+    align-items: center;
+    background-color: #eee;
+    border-radius: 4px;
+    padding: 5px 10px;
+    flex-grow: 1; /* Позволяет элементам растягиваться */
+}
+
+.search-container i, .filter-container i {
+    margin-right: 8px;
+    color: #555;
+}
+
+.controls input[type="text"],
+.controls select {
+    border: none;
+    background: none;
+    outline: none;
+    font-size: 1em;
+    flex-grow: 1; /* Позволяет полям ввода растягиваться */
+    padding: 5px 0;
+}
+
+/* Стили для списка заявок */
+.task-list {
+    display: grid;
+    gap: 15px; /* Расстояние между карточками заявок */
+    /* Можно использовать grid или flexbox для более сложной раскладки */
+}
+
+/* Стили для отдельной карточки заявки */
+.task-card {
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-left: 5px solid #007bff; /* Пример цветовой полосы слева */
+    border-radius: 5px;
+    padding: 15px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
+    transition: transform 0.2s ease-in-out; /* Анимация при наведении */
+    cursor: pointer; /* Курсор "рука", если карточка кликабельна */
+}
+
+.task-card.clickable:hover {
+    transform: translateY(-3px); /* Слегка приподнимаем при наведении */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+}
+
+
+.task-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed #eee; /* Пунктирная линия */
+    padding-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.task-title {
+    font-weight: bold;
+    color: #003366;
+    font-size: 1.1em;
+}
+
+.task-status {
+    font-size: 0.9em;
+    padding: 3px 8px;
+    border-radius: 3px;
+    color: white; /* Цвет текста статуса */
+}
+
+/* Стилизация статусов (примерные цвета, адаптируйте под RequestStatus) */
+.status-pending { background-color: #ffc107; color: #343a40; } /* Желтый */
+.status-assigned { background-color: #007bff; } /* Синий */
+.status-in_progress { background-color: #17a2b8; } /* Бирюзовый */
+.status-classified { background-color: #28a745; } /* Зеленый */
+.status-completed { background-color: #6c757d; } /* Серый */
+.status-done { background-color: #6c757d; } /* Серый (если done синоним completed) */
+.status-cancelled { background-color: #dc3545; } /* Красный */
+/* Добавьте другие статусы, если нужны */
+
+
+.task-info {
+    margin-bottom: 8px; /* Отступ между строками информации */
+    font-size: 0.95em;
+    color: #555;
+}
+
+.task-info .label {
+    font-weight: bold;
+    margin-right: 5px; /* Отступ после метки */
+    color: #003366; /* Цвет метки */
+}
+
+.task-info .label i {
+     margin-right: 5px; /* Отступ после иконки */
+     color: #007bff; /* Цвет иконок */
+}
+
+/* Стили для таймера/дедлайна */
+.task-info .timer .time-value {
+    font-weight: bold;
+}
+
+.task-info .timer.normal .time-value { color: #28a745; } /* Зеленый */
+.task-info .timer.warning .time-value { color: #ffc107; } /* Желтый */
+.task-info .timer.urgent .time-value { color: #dc3545; } /* Красный */
+
+
+/* Стили для подсказки "Кликните для классификации" */
+.pem-click-hint {
+    font-size: 0.85em;
+    color: #007bff;
+    text-align: center;
+    margin-top: 10px;
+    border-top: 1px dashed #eee;
+    padding-top: 8px;
+}
+
+
+/* Стили для кнопок действий (если они все же нужны, или для модальных окон) */
+.buttons {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Расстояние между кнопками */
+}
+
+.btn {
+    padding: 8px 12px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9em;
+    transition: background-color 0.2s ease;
+    display: inline-flex; /* Выравнивание иконок */
+    align-items: center; /* Выравнивание по центру */
+}
+
+.btn i {
+    margin-right: 5px;
+}
+
+.btn:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Пример стилей для разных типов кнопок */
+.btn-primary { background-color: #007bff; color: white; }
+.btn-secondary { background-color: #6c757d; color: white; }
+.btn-success { background-color: #28a745; color: white; }
+.btn-danger { background-color: #dc3545; color: white; }
+.btn-warning { background-color: #ffc107; color: #343a40; }
+.btn-info { background-color: #17a2b8; color: white; }
+.btn-light { background-color: #f8f9fa; color: #212529; border: 1px solid #ccc; }
+.btn-dark { background-color: #343a40; color: white; }
+
+/* Стилизация кнопок статусов из старого шаблона (если они где-то еще используются) */
+.btn-status-update { background-color: #007bff; color: white; }
+.btn-delete { background-color: #dc3545; color: white; }
+.btn-more { background-color: #6c757d; color: white; }
+
+
+/* Стили для модального окна */
+.modal {
+    /* Стили для позиционирования и фона */
+    position: fixed; /* Фиксированное положение */
+    z-index: 1000; /* Поверх всего остального */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto; /* Прокрутка, если содержимое большое */
+    background-color: rgba(0,0,0,0.4); /* Полупрозрачный черный фон */
+    display: none; /* Скрыто по умолчанию */
+    align-items: center; /* Выравнивание содержимого по центру */
+    justify-content: center; /* Выравнивание содержимого по центру */
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: auto; /* Автоматические отступы */
+    padding: 20px;
+    border: 1px solid #888;
+    width: 90%; /* Ширина */
+    max-width: 600px; /* Максимальная ширина */
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* Для позиционирования кнопки закрытия */
+}
+
+.close-button {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+    position: absolute; /* Абсолютное позиционирование */
+    top: 10px;
+    right: 15px;
+    cursor: pointer;
+}
+
+.close-button:hover,
+.close-button:focus {
+    color: #000;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.modal-content h2 {
+    margin-top: 0;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 10px;
+    margin-bottom: 15px;
+}
+
+.modal-content h3 {
+    margin-top: 15px;
+    margin-bottom: 10px;
+    color: #003366;
+}
+
+.modal-breadcrumb {
+    margin-bottom: 15px;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.modal-breadcrumb a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.modal-breadcrumb a:hover {
+    text-decoration: underline;
+}
+
+.modal-breadcrumb span {
+    margin: 0 5px;
+}
+
+.modal-buttons .back-btn,
+.modal-buttons button {
+    margin: 5px;
+    padding: 10px 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #eee;
+    cursor: pointer;
+    font-size: 1em;
+}
+
+.modal-buttons .back-btn {
+    background-color: #f8f9fa;
+}
+
+.modal-buttons button:hover:not(:disabled) {
+    background-color: #ddd;
+}
+
+.modal-final-code {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: #d4edda; /* Светло-зеленый */
+    border: 1px solid #c3e6cb;
+    border-radius: 4px;
+    color: #155724; /* Темно-зеленый */
+    font-size: 1.1em;
+    font-weight: bold;
+    text-align: center;
+}
+
+.modal-actions {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Стили для кнопки "Сменить роль / Выйти" */
+.back-btn { /* Если используется тот же класс, что и для "Назад" */
+    /* Дополнительные стили, если нужно */
+    margin-top: 10px;
+}
+
+/* Стили для кнопок отправки заявки */
+.submit-request-btn {
+     background-color: #28a745; /* Зеленый */
+     color: white;
+     font-weight: bold;
+     padding: 10px 20px;
+}
+
+.submit-request-btn:hover:not(:disabled) {
+    background-color: #218838;
+}
+
+/* Стили для кнопки "Выбрать другую" */
+.reset-btn {
+     background-color: #ffc107; /* Желтый */
+     color: #343a40;
+}
+
+.reset-btn:hover:not(:disabled) {
+    background-color: #e0a800;
+}
+
+/* Анимации (скопированы из JS, но тут только CSS часть) */
+.fade-out {
+    opacity: 0;
+    transition: opacity 0.3s ease-out;
+}
+
+.fade-in {
+    opacity: 1;
+    transition: opacity 0.3s ease-in;
+}
+
+
+/* Адаптивность базовых элементов */
+@media (max-width: 768px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .user-info {
+        margin-top: 15px;
+    }
+
+    .stats-container {
+        flex-direction: column;
+    }
+
+    .stat-card {
+        width: 100%;
+        margin: 5px 0;
+    }
+
+    .controls {
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .search-container, .filter-container {
+         width: 100%;
+    }
+
+    .buttons {
+        flex-direction: column;
+    }
+
+    .btn {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+
+    .submit-request-btn.submit-request-btn { /* Увеличиваем специфичность */
+        margin-left: 0 !important; /* Отменяем margin для адаптивности */
+        margin-top: 10px; /* Добавляем верхний отступ */
+    }
+
+    .modal-content {
+        width: 95%;
+    }
+}

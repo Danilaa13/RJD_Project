@@ -9,6 +9,7 @@ class UserRole(models.TextChoices):
     PEM = 'ПЭМ', _('ПЭМ')
     DISPATCHER = 'ПДК', _('Диспетчер')
     REVISOR = 'Ревизор', _('Ревизор')
+    ADMIN = 'Администратор', _('Администратор')
     # Добавьте другие роли, если необходимо
 
 class CustomUser(AbstractUser):
@@ -20,7 +21,7 @@ class CustomUser(AbstractUser):
     role = models.CharField(
         max_length=50,
         choices=UserRole.choices,
-        default=UserRole.CONDUCTOR, # Роль по умолчанию
+        default=UserRole.CONDUCTOR,
         verbose_name=_('Роль')
     )
     tabel = models.CharField(max_length=20, verbose_name=_('Табельный номер')) # Не делаем его уникальным здесь
