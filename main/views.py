@@ -19,7 +19,7 @@ def welcome_screen(request):
     #     elif request.user.role == UserRole.PEM:
     #         return redirect('pem_panel')
 
-    return render(request, 'main/index.html')
+    return render(request, 'main/main_panel.html')
 
 
 
