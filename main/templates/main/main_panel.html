@@ -7,100 +7,105 @@
     <title>АС Заявочный ремонт</title>
     <link rel="stylesheet" href="{% static 'main/style.css' %}">
 </head>
+
+
 <body>
 
+    <header class="app-header">
+        <div class="app-header-title">АС «Заявочный ремонт»</div>
+    </header>
 
-<div class="container">
-
-    <div id="welcome-screen">
-        <h1>АС «Заявочный ремонт»</h1>
-        <p>Добро пожаловать в демонстрационную версию!</p>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Federalpkrzd.png/640px-Federalpkrzd.png" alt="Логотип" width="200">
-        <button id="welcome-login-button">Вход</button> 
-    </div>
-
-    <div id="role-selection" style="display: none;">
-        <h2>Выберите вашу роль:</h2>
-        <div class="buttons-container">
-            <button onclick="selectRole('ПДК')">Диспетчер</button>
-            <button onclick="selectRole('Проводник')">Проводник</button>
-            <button onclick="selectRole('ПЭМ')">ПЭМ</button>
-            <button onclick="selectRole('Ревизор')">Ревизор</button> 
-            <button onclick="showStep('welcome-screen')" class="back-btn" style="margin-top: 20px;">Назад</button>
-        </div>
-    </div>
+    <div class="container">
     
-    <div id="registration-screen" style="display: none;">
-        <h2>Регистрация нового пользователя</h2>
-        <p id="registration-error-message" style="color: red;"></p> {# Место для сообщения об ошибке #}
-        <div>Ваша роль: <strong id="registration-role-display"></strong></div> {# Роль будет отображаться здесь #}
-        <input type="text" id="reg-tabel" placeholder="Табельный номер">
-        <input type="text" id="reg-fio" placeholder="ФИО сотрудника">
-        <input type="password" id="reg-password" placeholder="Пароль">
-        <input type="password" id="reg-password-confirm" placeholder="Повторите пароль">
-        <button onclick="registerUser()">Зарегистрироваться</button>
-        <button onclick="showStep('login-screen')" class="back-btn" style="margin-top: 10px;">Назад к авторизации</button>
-    </div>
-
-   
-    <div id="login-screen" style="display: none;">
-        <h2>Авторизация для роли: <span id="login-role-display"></span></h2>
-        <p id="login-error-message" style="color: red;"></p>
-        <input type="text" id="login-tabel" placeholder="Табельный номер сотрудника">
-        <input type="password" id="login-password" placeholder="Пароль"> {# Добавлено #}
-        <button onclick="attemptLogin()">Войти</button>
-        <button onclick="navigateToRegistration()" class="link-button" style="margin-top: 10px;">Нет аккаунта? Зарегистрироваться</button> {# Кнопка/ссылка на регистрацию #}
+        <div id="welcome-screen">
+            <h1>АС «Заявочный ремонт»</h1>
+            <p>Добро пожаловать в демонстрационную версию!</p>
+            <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6b/Federalpkrzd.png/640px-Federalpkrzd.png" alt="Логотип" width="200">
+            <button id="welcome-login-button">Вход</button> 
+        </div>
+    
+        <div id="role-selection" style="display: none;">
+            <h2>Выберите вашу роль:</h2>
+            <div class="buttons-container">
+                <button onclick="selectRole('ПДК')">Диспетчер</button>
+                <button onclick="selectRole('Проводник')">Проводник</button>
+                <button onclick="selectRole('ПЭМ')">ПЭМ</button>
+                <button onclick="selectRole('Ревизор')">Ревизор</button> 
+                <button onclick="showStep('welcome-screen')" class="back-btn" style="margin-top: 20px;">Назад</button>
+            </div>
+        </div>
+        
+        <div id="registration-screen" style="display: none;">
+            <h2>Регистрация нового пользователя</h2>
+            <p id="registration-error-message" style="color: red;"></p> {# Место для сообщения об ошибке #}
+            <div>Ваша роль: <strong id="registration-role-display"></strong></div> {# Роль будет отображаться здесь #}
+            <input type="text" id="reg-tabel" placeholder="Табельный номер">
+            <input type="text" id="reg-fio" placeholder="ФИО сотрудника">
+            <input type="password" id="reg-password" placeholder="Пароль">
+            <input type="password" id="reg-password-confirm" placeholder="Повторите пароль">
+            <button onclick="registerUser()">Зарегистрироваться</button>
+            <button onclick="showStep('login-screen')" class="back-btn" style="margin-top: 10px;">Назад к авторизации</button>
+        </div>
+    
+       
+        <div id="login-screen" style="display: none;">
+            <h2>Авторизация для роли: <span id="login-role-display"></span></h2>
+            <p id="login-error-message" style="color: red;"></p>
+            <input type="text" id="login-tabel" placeholder="Табельный номер сотрудника">
+            <input type="password" id="login-password" placeholder="Пароль"> {# Добавлено #}
+            <button onclick="attemptLogin()">Войти</button>
+            <button onclick="navigateToRegistration()" class="link-button" style="margin-top: 10px;">Нет аккаунта? Зарегистрироваться</button> {# Кнопка/ссылка на регистрацию #}
+            <button onclick="showStep('role-selection')" class="back-btn" style="margin-top: 10px;">Назад к выбору роли</button>
+        </div>
+        
+        
+        <div id="input-data" style="display: none;">
+        <h2>Введите данные рейса: <span id="role-display"></span></h2>
+        <div id="input-user-info" style="margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 5px; background-color: #f8f8f8;">
+        </div>
+            
+            <div class="form-field">
+                <label for="departure-city">Город отправления:</label>
+                <select id="departure-city">
+                    <option value="" disabled selected>Выберите город</option>
+                    <option value="Москва">Москва</option>
+                    <option value="Санкт-Петербург">Санкт-Петербург</option>
+                    <option value="Новосибирск">Новосибирск</option>
+                    <option value="Екатеринбург">Екатеринбург</option>
+                    <option value="Казань">Казань</option>
+                </select>
+            </div>
+            
+            
+            <div class="form-field"> 
+                <label for="departure-date">Дата отправления:</label>
+                <input type="date" id="departure-date"> 
+            </div>
+            
+            <div class="form-field">
+                <label for="train">Номер поезда:</label>
+                <input type="text" id="train" placeholder="Поезд">
+            </div>
+            
+            <div class="form-field">
+                <label for="wagon">Номер вагона:</label>
+                <input type="text" id="wagon" placeholder="Вагон">
+            </div>
+        <button onclick="submitUserData()">Далее</button>
         <button onclick="showStep('role-selection')" class="back-btn" style="margin-top: 10px;">Назад к выбору роли</button>
-    </div>
+        </div>
     
+        <div id="main-content" style="display: none;">
+            <div id="user-info">
+                </div>
+            <div id="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
+                 </div>
+            <h2 id="main-title">Выберите категорию</h2> 
+            <div id="buttons" class="buttons-container">
+                </div>
+        </div>
     
-    <div id="input-data" style="display: none;">
-    <h2>Введите данные рейса: <span id="role-display"></span></h2>
-    <div id="input-user-info" style="margin-bottom: 15px; padding: 10px; border: 1px solid #eee; border-radius: 5px; background-color: #f8f8f8;">
     </div>
-        
-        <div class="form-field">
-            <label for="departure-city">Город отправления:</label>
-            <select id="departure-city">
-                <option value="" disabled selected>Выберите город</option>
-                <option value="Москва">Москва</option>
-                <option value="Санкт-Петербург">Санкт-Петербург</option>
-                <option value="Новосибирск">Новосибирск</option>
-                <option value="Екатеринбург">Екатеринбург</option>
-                <option value="Казань">Казань</option>
-            </select>
-        </div>
-        
-        
-        <div class="form-field"> 
-            <label for="departure-date">Дата отправления:</label>
-            <input type="date" id="departure-date"> 
-        </div>
-        
-        <div class="form-field">
-            <label for="train">Номер поезда:</label>
-            <input type="text" id="train" placeholder="Поезд">
-        </div>
-        
-        <div class="form-field">
-            <label for="wagon">Номер вагона:</label>
-            <input type="text" id="wagon" placeholder="Вагон">
-        </div>
-    <button onclick="submitUserData()">Далее</button>
-    <button onclick="showStep('role-selection')" class="back-btn" style="margin-top: 10px;">Назад к выбору роли</button>
-    </div>
-
-    <div id="main-content" style="display: none;">
-        <div id="user-info">
-            </div>
-        <div id="breadcrumb" style="margin-top: 10px; margin-bottom: 10px;">
-             </div>
-        <h2 id="main-title">Выберите категорию</h2> 
-        <div id="buttons" class="buttons-container">
-            </div>
-    </div>
-
-</div>
 
 <form method="post" style="display:none;">{% csrf_token %}</form>
 <script src="{% static 'main/script.js' %}"></script>

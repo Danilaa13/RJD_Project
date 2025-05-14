@@ -1,281 +1,405 @@
-body {
-    font-family: sans-serif;
-    line-height: 1.6;
+:root {
+    --rzd-red: #d52b1e;
+    --rzd-blue-dark: #003366;
+    --rzd-blue-action: #005b96;
+    --rzd-blue-hover: #003f6b;
+    --rzd-white: #FFFFFF;
+    --rzd-gray-bg: #f0f2f5;
+    --rzd-gray-light: #e9ecef;
+    --rzd-gray-border: #ced4da;
+    --rzd-gray-text: #6c757d;
+    --rzd-text-dark: #343a40;
+    --rzd-text-light: #495057;
+    --rzd-yellow-reset: #ffc107;
+    --rzd-yellow-reset-hover: #e0a800;
+    --rzd-green-success-bg: #d4edda;
+    --rzd-green-success-border: #c3e6cb;
+    --rzd-green-success-text: #155724;
+
+    --font-family-sans-serif: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --base-font-size: 16px;
+    --border-radius: 0.3rem; /* 4.8px, если base = 16px */
+    --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075); /* Мягкая тень */
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
-    padding: 20px;
-    background-color: #f4f4f4;
+    padding: 0;
 }
 
-.container {
-    max-width: 800px;
-    margin: 20px auto;
-    background: #fff;
-    padding: 30px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+body {
+    font-family: var(--font-family-sans-serif);
+    line-height: 1.6;
+    background-color: var(--rzd-gray-bg);
+    color: var(--rzd-text-dark);
+    font-size: var(--base-font-size);
+    padding-top: 70px; /* Отступ для фиксированной шапки, если она будет */
 }
 
-h1, h2 {
-    color: #333;
+/* --- Шапка приложения --- */
+.app-header {
+    background-color: var(--rzd-blue-dark);
+    color: var(--rzd-white);
+    padding: 15px 30px;
     text-align: center;
-    margin-bottom: 20px;
+    position: fixed; /* Или absolute, или static */
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-/* Стили для этапов */
-#welcome-screen, #input-data, #main-content {
-    text-align: center; /* Центрируем содержимое блоков */
+.app-header-title {
+    font-size: 1.5em;
+    font-weight: bold;
+}
+
+
+/* --- Основной контейнер --- */
+.container {
+    max-width: 700px; /* Немного уже для лучшей читаемости на десктопе */
+    margin: 30px auto;
+    background: var(--rzd-white);
+    padding: 25px;   /* Немного меньше padding */
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+/* --- Заголовки --- */
+h1, h2 {
+    color: var(--rzd-blue-dark);
+    text-align: center;
+    margin-bottom: 25px;
+}
+h1 { font-size: 2em; }
+h2 { font-size: 1.6em; }
+
+/* --- Экраны этапов --- */
+#welcome-screen, #role-selection, #input-data, #main-content,
+#login-screen, #registration-screen {
+    text-align: center;
+    padding: 15px 0; /* Добавим немного вертикального отступа */
 }
 
 #welcome-screen img {
     display: block;
-    margin: 20px auto;
-    max-width: 100%;
+    margin: 25px auto;
+    max-width: 180px; /* Немного меньше лого */
     height: auto;
 }
 
-/* Стили для полей ввода */
-input[type="text"] {
+/* --- Формы и поля ввода --- */
+input[type="text"],
+input[type="password"],
+input[type="date"],
+select {
     display: block;
-    width: calc(100% - 22px); /* Учитываем padding и border */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
+    width: 100%;
+    padding: 12px 15px;
+    margin-bottom: 18px;
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
     font-size: 1em;
+    color: var(--rzd-text-dark);
+    background-color: var(--rzd-white);
+    transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
 }
 
-/* Стили для кнопок */
-button {
-    display: inline-block; /* Изменено для кнопок в ряд */
-    background-color: #005b96; /* Синий цвет РЖД */
-    color: white;
-    padding: 12px 20px;
-    border: none;
-    border-radius: 5px;
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="date"]:focus,
+select:focus {
+    border-color: var(--rzd-blue-action);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 91, 150, 0.25); /* Тень фокуса в стиле РЖД */
+}
+
+.form-field {
+    margin-bottom: 18px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.form-field label {
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--rzd-text-light);
+}
+
+/* --- Кнопки --- */
+button, .btn { /* Добавляем .btn для единообразия, если будете использовать такой класс */
+    display: inline-block;
+    font-weight: 600;
+    color: var(--rzd-white);
+    background-color: var(--rzd-blue-hover); /* Основной цвет - красный */
+    text-align: center;
+    vertical-align: middle;
     cursor: pointer;
+    border: 1px solid transparent;
+    padding: 10px 20px; /* Немного другие падинги */
     font-size: 1em;
-    margin: 5px; /* Добавляем отступы между кнопками */
-    transition: background-color 0.3s ease;
-    min-width: 100px; /* Минимальная ширина для кнопок */
+    border-radius: var(--border-radius);
+    margin: 5px;
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-decoration: none; /* Для единообразия, если кнопка будет ссылкой */
 }
 
-button:hover:not(:disabled) {
-    background-color: #003f6b; /* Более темный синий при наведении */
+button:hover:not(:disabled), .btn:hover:not(:disabled) {
+    background-color: #a71e12; /* Темнее красный */
+    border-color: #9b1b10;
 }
 
-button:disabled {
+button:focus, .btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(213, 43, 30, 0.5); /* Тень фокуса для красной кнопки */
+}
+
+button:disabled, .btn:disabled {
     background-color: #cccccc;
+    border-color: #cccccc;
+    color: #666666;
     cursor: not-allowed;
+    opacity: 0.65;
 }
 
-.buttons-container {
-    margin-top: 20px;
-    text-align: center; /* Центрируем кнопки в контейнере */
-    /* Стили для flex-расположения, если нужно */
-    /* display: flex; */
-    /* flex-wrap: wrap; */
-    /* justify-content: center; */
+/* Синяя кнопка (вторичная или акцентная) */
+.btn-blue {
+    background-color: var(--rzd-blue-action);
+    border-color: var(--rzd-blue-action);
 }
+.btn-blue:hover:not(:disabled) {
+    background-color: var(--rzd-blue-hover);
+    border-color: #003760;
+}
+.btn-blue:focus {
+    box-shadow: 0 0 0 0.2rem rgba(0, 91, 150, 0.5);
+}
+
 
 .back-btn {
-    background-color: #6c757d; /* Серый для кнопки Назад */
+    background-color: var(--rzd-gray-text);
+    border-color: var(--rzd-gray-text);
 }
-.back-btn:hover {
+.back-btn:hover:not(:disabled) {
     background-color: #5a6268;
+    border-color: #545b62;
 }
-.reset-btn {
-    background-color: #ffc107; /* Желтый для сброса */
-    color: #333;
-}
-.reset-btn:hover {
-    background-color: #e0a800;
+.back-btn:focus {
+     box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.5);
 }
 
 
-/* Стили для блока информации и хлебных крошек */
+.reset-btn, .link-button { /* Объединим, если сброс тоже будет ссылкой */
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--rzd-blue-action);
+    text-decoration: underline;
+    padding: 5px; /* Меньше паддинг для ссылок */
+}
+.reset-btn:hover:not(:disabled), .link-button:hover:not(:disabled) {
+    color: var(--rzd-blue-hover);
+    background-color: transparent;
+    text-decoration: none;
+}
+.reset-btn.yellow { /* Если нужен желтый вариант для сброса */
+    background-color: var(--rzd-yellow-reset);
+    color: var(--rzd-text-dark);
+    text-decoration: none;
+    border: 1px solid var(--rzd-yellow-reset);
+}
+.reset-btn.yellow:hover:not(:disabled) {
+    background-color: var(--rzd-yellow-reset-hover);
+    border-color: var(--rzd-yellow-reset-hover);
+}
+
+
+.buttons-container {
+    margin-top: 25px;
+    text-align: center;
+    display: flex; /* Делаем кнопки гибкими */
+    flex-wrap: wrap; /* Позволяем переноситься */
+    justify-content: center; /* Центрируем */
+    gap: 10px; /* Пространство между кнопками */
+}
+
+/* --- Информационные блоки --- */
 #user-info {
-    background-color: #e9ecef;
+    background-color: var(--rzd-gray-light);
     padding: 15px;
-    border-radius: 5px;
-    margin-bottom: 20px;
-    text-align: left; /* Выравнивание текста слева */
-    border: 1px solid #ced4da;
+    border-radius: var(--border-radius);
+    margin-bottom: 25px;
+    text-align: left;
+    border: 1px solid var(--rzd-gray-border);
+    font-size: 0.95em;
 }
 
 #breadcrumb {
-    margin-top: 15px;
-    margin-bottom: 15px;
+    margin: 20px 0;
     font-size: 0.9em;
-    color: #666;
-    text-align: left; /* Выравнивание слева */
+    color: var(--rzd-gray-text);
+    text-align: left;
 }
-
 #breadcrumb a {
-    color: #005b96;
+    color: var(--rzd-blue-action);
     text-decoration: none;
+    font-weight: 500;
 }
-
 #breadcrumb a:hover {
     text-decoration: underline;
 }
-
-#breadcrumb span {
-    color: #333; /* Цвет текущего уровня */
+#breadcrumb span:not(.separator) { /* Текущий элемент */
+    color: var(--rzd-text-dark);
+    font-weight: 600;
+}
+#breadcrumb .separator {
+    margin: 0 5px;
+    color: var(--rzd-gray-text);
 }
 
-/* Класс для финального кода */
+
 .final-code {
-    margin-top: 20px;
-    padding: 15px;
-    background-color: #d4edda; /* Светло-зеленый фон */
-    border: 1px solid #c3e6cb;
-    color: #155724; /* Темно-зеленый текст */
-    border-radius: 5px;
-    font-size: 1.1em;
+    margin-top: 25px;
+    padding: 18px;
+    background-color: var(--rzd-green-success-bg);
+    border: 1px solid var(--rzd-green-success-border);
+    color: var(--rzd-green-success-text);
+    border-radius: var(--border-radius);
+    font-size: 1.15em;
     text-align: center;
+    font-weight: 600;
 }
 
-/* Анимация появления/исчезновения */
-.buttons-container {
-    transition: opacity 0.3s ease-in-out;
-}
-
-.fade-in {
-    opacity: 1;
-}
-
-.fade-out {
-    opacity: 0;
-}
-
-/* Добавьте или измените эти стили */
-
+/* --- Экраны Логина/Регистрации --- */
 #login-screen,
 #registration-screen {
-    /* Общие стили для центрирования и внешнего вида */
-    display: flex; /* Используем flexbox для центрирования содержимого */
-    flex-direction: column; /* Элементы идут друг за другом */
-    align-items: center; /* Центрируем по горизонтали */
-    justify-content: center; /* Центрируем по вертикали (если нужно) */
-    padding: 20px;
-    border: 1px solid #ccc;
-    border-radius: 8px;
-    background-color: #f9f9f9;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    max-width: 400px; /* Ограничиваем ширину формы */
-    margin: 50px auto; /* Центрируем блок по горизонтали */
-}
-
-#login-screen h2,
-#registration-screen h2 {
-    color: #333;
-    margin-bottom: 20px;
-}
-
-#login-screen input[type="text"],
-#login-screen input[type="password"],
-#registration-screen input[type="text"],
-#registration-screen input[type="password"] {
-    width: calc(100% - 20px); /* Почти полная ширина с учетом padding */
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
+    padding: 25px;
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
+    background-color: var(--rzd-white); /* Изменим фон на белый */
+    box-shadow: var(--box-shadow);
+    max-width: 450px;
+    margin: 40px auto;
 }
 
 #login-error-message,
 #registration-error-message {
-    color: red;
+    color: var(--rzd-red);
+    background-color: #fddede;
+    border: 1px solid #fbb2b2;
+    padding: 10px;
+    border-radius: var(--border-radius);
     margin-bottom: 15px;
     text-align: center;
+    font-size: 0.9em;
+}
+/* Скрываем сообщение об ошибке, если оно пустое */
+#login-error-message:empty,
+#registration-error-message:empty {
+    display: none;
 }
 
-#login-screen button,
-#registration-screen button {
-    /* Ваши стили для кнопок */
-    background-color: #007bff;
-    color: white;
-    padding: 10px 15px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-size: 1em;
-    margin-top: 5px; /* Отступ между кнопками */
-    transition: background-color 0.3s ease;
+
+#registration-screen div,
+#login-screen h2 span { /* Для отображения роли */
+    font-weight: normal;
+    color: var(--rzd-blue-dark);
+    font-size: 0.9em;
+    margin-bottom: 10px;
 }
 
-#login-screen button:hover,
-#registration-screen button:hover {
-    background-color: #0056b3;
-}
 
-/* Стили для кнопки "Назад" */
-.back-btn {
-    background-color: #6c757d; /* Серый цвет */
+/* --- Анимации (можно оставить) --- */
+.buttons-container.animated { /* Добавим класс animated для контроля */
+    transition: opacity 0.3s ease-in-out;
 }
+.fade-in { opacity: 1; }
+.fade-out { opacity: 0; }
 
-.back-btn:hover {
-    background-color: #5a6268;
+/* --- Стили для input-data --- */
+#input-data {
+    max-width: 450px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 20px;
 }
-
-/* Стили для кнопки, которая выглядит как ссылка */
-.link-button {
-    background: none; /* Без фона */
-    border: none; /* Без рамки */
-    color: #007bff; /* Цвет ссылки */
-    cursor: pointer;
-    padding: 0; /* Убираем внутренние отступы */
-    text-decoration: underline; /* Подчеркивание как у ссылки */
-    margin-top: 10px; /* Отступ сверху */
-    font-size: 0.9em; /* Немного меньше шрифт */
-}
-
-.link-button:hover {
-     text-decoration: none; /* Убираем подчеркивание при наведении */
-     color: #0056b3; /* Темнее при наведении */
-}
-
-.form-field {
-    margin-bottom: 15px;
-    width: 100%; /* Чтобы поля занимали доступную ширину */
-    max-width: 300px; /* Ограничиваем максимальную ширину для центрирования */
-    display: flex;
-    flex-direction: column; /* Располагаем метку над полем ввода */
-    align-items: flex-start; /* Выравнивание меток и полей по левому краю */
-}
-
-.form-field label {
-    margin-bottom: 5px; /* Отступ между меткой и полем */
-    font-weight: bold; /* Делаем метки жирными */
-    color: #555;
-}
-
-.form-field input[type="text"],
-.form-field input[type="date"],
-.form-field select{
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 1em;
-    width: calc(100% - 22px); /* Полная ширина минус padding и border */
-    box-sizing: border-box; /* Включаем padding и border в общую ширину */
-}
-
-/* Стиль для плейсхолдера в select */
-.form-field select option:first-child {
-    color: #999;
-}
-
-/* Стили для блока с информацией о пользователе */
 #input-user-info {
-     font-size: 0.95em;
-     color: #333;
-     width: 100%;
-     max-width: 300px;
-     box-sizing: border-box;
+    font-size: 0.95em;
+    color: var(--rzd-text-light);
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
+    background-color: var(--rzd-gray-light);
+}
+#input-user-info strong {
+    color: var(--rzd-text-dark);
 }
 
-#input-user-info strong {
-    color: #000;
+
+/* === АДАПТИВНОСТЬ (Мобильные устройства) === */
+@media (max-width: 768px) {
+    body {
+        padding: 10px;
+        padding-top: 60px; /* Отступ для шапки на мобильных */
+    }
+    .app-header {
+        padding: 10px 15px;
+    }
+    .app-header-title {
+        font-size: 1.2em;
+    }
+
+    .container {
+        margin: 15px auto;
+        padding: 20px;
+    }
+
+    h1 { font-size: 1.6em; }
+    h2 { font-size: 1.4em; }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="date"],
+    select {
+        padding: 10px;
+        font-size: 0.95em;
+    }
+
+    button, .btn {
+        padding: 10px 15px;
+        font-size: 0.95em;
+        width: 100%; /* Кнопки на всю ширину для удобства */
+        margin-left: 0;
+        margin-right: 0;
+    }
+    .buttons-container button, .buttons-container .btn {
+         width: calc(50% - 10px); /* Две кнопки в ряд, если возможно */
+    }
+     .buttons-container button.back-btn, /* Кнопка назад всегда на всю ширину */
+     .buttons-container button.reset-btn { /* И сброс тоже */
+         width: 100%;
+     }
+
+
+    #login-screen,
+    #registration-screen,
+    #input-data {
+        margin: 20px auto;
+        padding: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .buttons-container button, .buttons-container .btn {
+         width: 100%; /* Все кнопки в один столбец на очень маленьких экранах */
+    }
+     .app-header-title {
+        font-size: 1.1em;
+    }
 }

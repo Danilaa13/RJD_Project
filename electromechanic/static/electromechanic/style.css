@@ -1,479 +1,553 @@
-/* electromechanic/static/electromechanic/style.css */
+/* --- Глобальные переменные и основные стили --- */
+:root {
+    --rzd-red: #d52b1e;
+    --rzd-blue-dark: #003366;
+    --rzd-blue-action: #005b96;
+    --rzd-blue-hover: #003f6b;
+    --rzd-blue-light-bg: #e6f0fa; /* Светло-голубой фон */
+    --rzd-white: #FFFFFF;
+    --rzd-gray-bg: #f0f2f5;
+    --rzd-gray-light: #e9ecef;
+    --rzd-gray-border: #ced4da;
+    --rzd-gray-text: #6c757d;
+    --rzd-text-dark: #343a40;
+    --rzd-text-light: #495057;
 
-/* Общие стили для тела страницы и контейнера */
-body {
-    font-family: 'Arial', sans-serif;
-    line-height: 1.6;
+    --rzd-green-success: #198754;
+    --rzd-green-success-bg: #d1e7dd;
+    --rzd-yellow-warning: #ffc107;
+    --rzd-yellow-warning-text: #664d03; /* Темный текст для желтого фона */
+    --rzd-red-urgent-bg: #f8d7da;
+    --rzd-red-urgent-text: #842029;
+
+    --font-family-sans-serif: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    --base-font-size: 16px;
+    --border-radius: 0.3rem;
+    --box-shadow: 0 0.125rem 0.25rem rgba(0, 0, 0, 0.075);
+    --card-box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.05);
+}
+
+* {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    background-color: #f4f4f4;
-    color: #333;
+}
+
+body {
+    font-family: var(--font-family-sans-serif);
+    background-color: var(--rzd-gray-bg);
+    color: var(--rzd-text-dark);
+    margin: 0;
+    font-size: var(--base-font-size);
+    line-height: 1.5;
 }
 
 .container {
-    width: 90%;
-    max-width: 1200px;
+    max-width: 1300px;
     margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    border-radius: 8px;
+    padding: 25px;
+    background-color: var(--rzd-white);
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
 }
 
-/* Стили для шапки */
-header {
+/* --- Шапка Панели (аналогично Диспетчерской) --- */
+header.panel-header { /* Добавим класс для специфичности */
     display: flex;
     justify-content: space-between;
     align-items: center;
+    border-bottom: 2px solid var(--rzd-blue-dark);
     padding-bottom: 20px;
-    border-bottom: 1px solid #eee;
-    margin-bottom: 20px;
+    margin-bottom: 25px;
 }
 
-header h1 {
+header.panel-header .header-title h1 {
     margin: 0;
-    color: #003366; /* Пример корпоративного цвета */
+    font-size: 1.9em;
+    color: var(--rzd-blue-dark);
+    font-weight: 700;
 }
 
-header p {
+header.panel-header .header-title p {
     margin: 5px 0 0 0;
+    color: var(--rzd-text-light);
     font-size: 0.9em;
-    color: #666;
 }
 
 .user-info {
     display: flex;
     align-items: center;
 }
-
+.user-info .user-details {
+    text-align: right;
+}
 .user-name {
-    font-weight: bold;
-    color: #0056b3;
+    font-weight: 600;
+    color: var(--rzd-text-dark);
 }
-
-.user-role {
-    font-size: 0.9em;
-    color: #555;
+.user-role { /* Для ПЭМ будет другая роль */
+    font-size: 0.85em;
+    color: var(--rzd-gray-text);
 }
-
 .user-avatar {
-    font-size: 2em;
+    font-size: 1.6em;
+    background-color: var(--rzd-red);
+    color: var(--rzd-white);
+    border-radius: 50%;
+    width: 45px;
+    height: 45px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
     margin-left: 15px;
-    color: #003366;
 }
 
-/* Стили для статистики */
+/* --- Статистика (если нужна для ПЭМ) --- */
 .stats-container {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    flex-wrap: wrap; /* Для адаптивности */
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 20px;
+    margin-bottom: 30px;
 }
 
 .stat-card {
-    background-color: #e9ecef;
-    padding: 15px;
-    border-radius: 5px;
+    background-color: var(--rzd-white);
+    padding: 20px;
+    border-radius: var(--border-radius);
+    border: 1px solid var(--rzd-gray-border);
     text-align: center;
-    min-width: 120px; /* Минимальная ширина карточки */
-    margin: 5px; /* Отступы между карточками */
-    flex-grow: 1; /* Растягиваться по возможности */
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    box-shadow: var(--card-box-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
-
+.stat-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
 .stat-title {
-    font-size: 0.9em;
-    color: #555;
-    margin-bottom: 5px;
+    font-size: 0.95em;
+    color: var(--rzd-text-light);
+    margin-bottom: 10px;
+    font-weight: 500;
 }
-
 .stat-value {
-    font-size: 1.5em;
-    font-weight: bold;
-    color: #003366;
+    font-size: 2.2em;
+    font-weight: 700;
+    color: var(--rzd-blue-dark);
+    margin-bottom: 8px;
 }
 
-/* Стили для элементов управления (поиск, фильтр) */
+/* --- Контролы (поиск, фильтр) --- */
 .controls {
     display: flex;
-    gap: 15px; /* Расстояние между элементами */
-    margin-bottom: 20px;
-    flex-wrap: wrap;
+    justify-content: space-between;
     align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px;
+    background-color: var(--rzd-gray-light);
+    border-radius: var(--border-radius);
 }
 
-.search-container, .filter-container {
+.search-container {
     display: flex;
     align-items: center;
-    background-color: #eee;
-    border-radius: 4px;
-    padding: 5px 10px;
-    flex-grow: 1; /* Позволяет элементам растягиваться */
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
+    padding: 8px 12px;
+    background-color: var(--rzd-white);
+    flex-grow: 1;
+    min-width: 250px;
 }
-
-.search-container i, .filter-container i {
-    margin-right: 8px;
-    color: #555;
+.search-container i {
+    color: var(--rzd-gray-text);
+    margin-right: 10px;
 }
-
-.controls input[type="text"],
-.controls select {
+.search-container input {
     border: none;
-    background: none;
     outline: none;
-    font-size: 1em;
-    flex-grow: 1; /* Позволяет полям ввода растягиваться */
+    flex-grow: 1;
     padding: 5px 0;
+    font-size: 1em;
+    background-color: transparent;
+}
+.search-container input:focus {
+    box-shadow: none;
 }
 
-/* Стили для списка заявок */
+.filter-container select {
+    padding: 10px 15px;
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
+    font-size: 1em;
+    background-color: var(--rzd-white);
+    color: var(--rzd-text-dark);
+    cursor: pointer;
+    min-width: 200px;
+}
+.filter-container select:focus {
+    border-color: var(--rzd-blue-action);
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 91, 150, 0.25);
+}
+
+/* --- Список Задач (Карточки ПЭМ) --- */
 .task-list {
     display: grid;
-    gap: 15px; /* Расстояние между карточками заявок */
-    /* Можно использовать grid или flexbox для более сложной раскладки */
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 20px;
 }
 
-/* Стили для отдельной карточки заявки */
 .task-card {
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-left: 5px solid #007bff; /* Пример цветовой полосы слева */
-    border-radius: 5px;
-    padding: 15px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08);
-    transition: transform 0.2s ease-in-out; /* Анимация при наведении */
-    cursor: pointer; /* Курсор "рука", если карточка кликабельна */
+    background-color: var(--rzd-white);
+    border: 1px solid var(--rzd-gray-border);
+    border-left: 5px solid var(--rzd-blue-action); /* Синяя полоса слева для ПЭМ */
+    border-radius: var(--border-radius);
+    padding: 18px;
+    box-shadow: var(--card-box-shadow);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
+.task-card.clickable { /* Класс для кликабельных карточек ПЭМ */
+    cursor: pointer;
+}
 .task-card.clickable:hover {
-    transform: translateY(-3px); /* Слегка приподнимаем при наведении */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.12);
+    transform: translateY(-4px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+    border-left-color: var(--rzd-red); /* Красная полоса при наведении */
 }
-
 
 .task-header {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px dashed #eee; /* Пунктирная линия */
+    align-items: flex-start;
+    margin-bottom: 15px;
     padding-bottom: 10px;
-    margin-bottom: 10px;
+    border-bottom: 1px solid var(--rzd-gray-light);
 }
-
-.task-title {
-    font-weight: bold;
-    color: #003366;
+.task-title { /* Название (Поезд/Вагон для ПЭМ) */
+    font-weight: 600;
     font-size: 1.1em;
+    color: var(--rzd-blue-dark);
+    margin-right: 10px;
 }
-
 .task-status {
-    font-size: 0.9em;
-    padding: 3px 8px;
-    border-radius: 3px;
-    color: white; /* Цвет текста статуса */
+    font-size: 0.75em;
+    font-weight: 700;
+    padding: 4px 10px;
+    border-radius: 12px;
+    text-transform: uppercase;
+    white-space: nowrap;
 }
 
-/* Стилизация статусов (примерные цвета, адаптируйте под RequestStatus) */
-.status-pending { background-color: #ffc107; color: #343a40; } /* Желтый */
-.status-assigned { background-color: #007bff; } /* Синий */
-.status-in_progress { background-color: #17a2b8; } /* Бирюзовый */
-.status-classified { background-color: #28a745; } /* Зеленый */
-.status-completed { background-color: #6c757d; } /* Серый */
-.status-done { background-color: #6c757d; } /* Серый (если done синоним completed) */
-.status-cancelled { background-color: #dc3545; } /* Красный */
-/* Добавьте другие статусы, если нужны */
+/* Статусы (используем те же, что и для диспетчера) */
+.status-pending, .status-new {
+    background-color: var(--rzd-blue-light-bg); color: var(--rzd-blue-dark); border: 1px solid var(--rzd-blue-action);
+}
+.status-assigned, .status-in_progress, .status-classified {
+    background-color: var(--rzd-yellow-warning); color: var(--rzd-yellow-warning-text); border: 1px solid #ffda6a;
+}
+.status-done, .status-completed {
+    background-color: var(--rzd-green-success-bg); color: var(--rzd-green-success); border: 1px solid var(--rzd-green-success);
+}
+.status-urgent {
+    background-color: var(--rzd-red-urgent-bg); color: var(--rzd-red-urgent-text); border: 1px solid var(--rzd-red);
+}
+.status-cancelled {
+    background-color: var(--rzd-gray-light); color: var(--rzd-gray-text); border: 1px solid var(--rzd-gray-border);
+}
 
 
 .task-info {
-    margin-bottom: 8px; /* Отступ между строками информации */
-    font-size: 0.95em;
-    color: #555;
+    margin-bottom: 10px;
+    display: flex;
+    align-items: baseline;
+    font-size: 0.9em;
+    line-height: 1.4;
 }
-
 .task-info .label {
-    font-weight: bold;
-    margin-right: 5px; /* Отступ после метки */
-    color: #003366; /* Цвет метки */
+    color: var(--rzd-text-light);
+    min-width: 130px; /* Для ПЭМ можно чуть шире метки */
+    font-weight: 500;
+    display: inline-block;
 }
-
 .task-info .label i {
-     margin-right: 5px; /* Отступ после иконки */
-     color: #007bff; /* Цвет иконок */
+    margin-right: 8px;
+    width: 16px;
+    text-align: center;
+    color: var(--rzd-blue-action);
+}
+.task-info .value {
+    font-weight: 500;
+    color: var(--rzd-text-dark);
+}
+.task-info .value[title] {
+    cursor: help;
 }
 
-/* Стили для таймера/дедлайна */
-.task-info .timer .time-value {
-    font-weight: bold;
-}
+/* Таймер (если нужен ПЭМ) */
+.timer { display: inline-flex; align-items: center; font-weight: 600; }
+.timer i { margin-right: 6px; }
+.timer.normal .time-value { color: var(--rzd-green-success); }
+.timer.warning .time-value { color: var(--rzd-yellow-warning-text); }
+.timer.urgent .time-value { color: var(--rzd-red); font-weight: 700; }
+.status-done-text, .status-classified-text { color: var(--rzd-text-dark); font-weight: 600; }
 
-.task-info .timer.normal .time-value { color: #28a745; } /* Зеленый */
-.task-info .timer.warning .time-value { color: #ffc107; } /* Желтый */
-.task-info .timer.urgent .time-value { color: #dc3545; } /* Красный */
-
-
-/* Стили для подсказки "Кликните для классификации" */
+/* Подсказка для клика на карточке ПЭМ */
 .pem-click-hint {
     font-size: 0.85em;
-    color: #007bff;
+    color: var(--rzd-blue-action);
     text-align: center;
-    margin-top: 10px;
-    border-top: 1px dashed #eee;
-    padding-top: 8px;
+    margin-top: 12px;
+    border-top: 1px dashed var(--rzd-gray-border);
+    padding-top: 10px;
+    font-style: italic;
 }
 
-
-/* Стили для кнопок действий (если они все же нужны, или для модальных окон) */
-.buttons {
-    margin-top: 15px;
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px; /* Расстояние между кнопками */
-}
-
+/* --- Кнопки (если будут общие для модальных окон или другие) --- */
 .btn {
-    padding: 8px 12px;
-    border: none;
-    border-radius: 4px;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-weight: 600;
+    color: var(--rzd-white);
+    background-color: var(--rzd-blue-action); /* Синий по умолчанию для ПЭМ кнопок */
+    text-align: center;
+    vertical-align: middle;
     cursor: pointer;
+    border: 1px solid transparent;
+    padding: 8px 15px;
     font-size: 0.9em;
-    transition: background-color 0.2s ease;
-    display: inline-flex; /* Выравнивание иконок */
-    align-items: center; /* Выравнивание по центру */
+    border-radius: var(--border-radius);
+    transition: background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+    text-decoration: none;
 }
-
-.btn i {
-    margin-right: 5px;
-}
-
 .btn:hover:not(:disabled) {
-    opacity: 0.9;
+    background-color: var(--rzd-blue-hover);
 }
-
+.btn:focus {
+    outline: 0;
+    box-shadow: 0 0 0 0.2rem rgba(0, 91, 150, 0.5);
+}
 .btn:disabled {
-    background-color: #ccc;
+    background-color: #cccccc;
+    border-color: #cccccc;
+    color: #666666;
     cursor: not-allowed;
+    opacity: 0.65;
 }
 
-/* Пример стилей для разных типов кнопок */
-.btn-primary { background-color: #007bff; color: white; }
-.btn-secondary { background-color: #6c757d; color: white; }
-.btn-success { background-color: #28a745; color: white; }
-.btn-danger { background-color: #dc3545; color: white; }
-.btn-warning { background-color: #ffc107; color: #343a40; }
-.btn-info { background-color: #17a2b8; color: white; }
-.btn-light { background-color: #f8f9fa; color: #212529; border: 1px solid #ccc; }
-.btn-dark { background-color: #343a40; color: white; }
+.btn.btn-primary, .btn.btn-save { /* Для основной кнопки действия (Сохранить классификацию) */
+    background-color: var(--rzd-red);
+    border-color: var(--rzd-red);
+}
+.btn.btn-primary:hover:not(:disabled), .btn.btn-save:hover:not(:disabled) {
+    background-color: #a71e12;
+    border-color: #9b1b10;
+}
+.btn.btn-primary:focus, .btn.btn-save:focus {
+    box-shadow: 0 0 0 0.2rem rgba(213, 43, 30, 0.5);
+}
 
-/* Стилизация кнопок статусов из старого шаблона (если они где-то еще используются) */
-.btn-status-update { background-color: #007bff; color: white; }
-.btn-delete { background-color: #dc3545; color: white; }
-.btn-more { background-color: #6c757d; color: white; }
+.btn.btn-secondary, .btn.btn-cancel { /* Для кнопки "Отмена" */
+    background-color: var(--rzd-gray-text);
+    border-color: var(--rzd-gray-text);
+}
+.btn.btn-secondary:hover:not(:disabled), .btn.btn-cancel:hover:not(:disabled) {
+    background-color: #5a6268;
+    border-color: #545b62;
+}
 
-
-/* Стили для модального окна */
+/* --- Модальное окно для классификации (ПЭМ) --- */
 .modal {
-    /* Стили для позиционирования и фона */
-    position: fixed; /* Фиксированное положение */
-    z-index: 1000; /* Поверх всего остального */
+    display: none;
+    position: fixed;
+    z-index: 1001;
     left: 0;
     top: 0;
     width: 100%;
     height: 100%;
-    overflow: auto; /* Прокрутка, если содержимое большое */
-    background-color: rgba(0,0,0,0.4); /* Полупрозрачный черный фон */
-    display: none; /* Скрыто по умолчанию */
-    align-items: center; /* Выравнивание содержимого по центру */
-    justify-content: center; /* Выравнивание содержимого по центру */
+    overflow: auto;
+    background-color: rgba(0,0,0,0.6); /* Чуть темнее фон */
+    padding-top: 50px; /* Отступ сверху */
+    align-items: flex-start; /* Чтобы модалка была ближе к верху */
+    justify-content: center;
 }
-
 .modal-content {
-    background-color: #fefefe;
-    margin: auto; /* Автоматические отступы */
-    padding: 20px;
-    border: 1px solid #888;
-    width: 90%; /* Ширина */
-    max-width: 600px; /* Максимальная ширина */
-    border-radius: 8px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    position: relative; /* Для позиционирования кнопки закрытия */
+    background-color: var(--rzd-white);
+    margin: 2% auto; /* Отступы для центрирования, если не flex */
+    padding: 25px;
+    border: 1px solid var(--rzd-gray-border);
+    width: 90%;
+    max-width: 650px; /* Чуть шире модалка */
+    border-radius: var(--border-radius);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    position: relative;
 }
-
 .close-button {
-    color: #aaa;
-    float: right;
-    font-size: 28px;
+    color: var(--rzd-gray-text);
+    float: right; /* Устарело, лучше flex или grid для шапки модалки */
+    font-size: 2em; /* Крупнее */
     font-weight: bold;
-    position: absolute; /* Абсолютное позиционирование */
-    top: 10px;
-    right: 15px;
+    line-height: 0.5; /* Чтобы крестик был по центру */
+    position: absolute;
+    top: 15px;
+    right: 20px;
     cursor: pointer;
 }
-
 .close-button:hover,
 .close-button:focus {
-    color: #000;
+    color: var(--rzd-text-dark);
     text-decoration: none;
-    cursor: pointer;
 }
 
-.modal-content h2 {
+.modal h2 {
+    color: var(--rzd-blue-dark);
     margin-top: 0;
-    border-bottom: 1px solid #eee;
+    margin-bottom: 20px;
+    text-align: left;
+    font-size: 1.5em;
+    border-bottom: 1px solid var(--rzd-gray-light);
     padding-bottom: 10px;
-    margin-bottom: 15px;
 }
-
-.modal-content h3 {
-    margin-top: 15px;
-    margin-bottom: 10px;
-    color: #003366;
-}
-
-.modal-breadcrumb {
-    margin-bottom: 15px;
+.modal #modal-request-id { font-weight: normal; color: var(--rzd-gray-text); font-size: 0.9em; }
+.modal #modal-request-details {
+    padding: 12px;
+    background-color: var(--rzd-blue-light-bg); /* Светло-синий фон */
+    border: 1px solid var(--rzd-gray-border);
+    border-radius: var(--border-radius);
+    margin-bottom: 20px;
     font-size: 0.9em;
-    color: #666;
+    line-height: 1.5;
 }
-
-.modal-breadcrumb a {
-    color: #007bff;
+.modal #modal-breadcrumb {
+    margin: 15px 0;
+    font-size: 0.9em;
+    color: var(--rzd-gray-text);
+    text-align: left;
+ }
+.modal #modal-breadcrumb a {
+    color: var(--rzd-blue-action);
     text-decoration: none;
+    font-weight: 500;
 }
+.modal #modal-breadcrumb a:hover { text-decoration: underline; }
+.modal #modal-breadcrumb span:not(.separator) { color: var(--rzd-text-dark); font-weight: 600; }
+.modal #modal-breadcrumb .separator { margin: 0 5px; color: var(--rzd-gray-text); }
 
-.modal-breadcrumb a:hover {
-    text-decoration: underline;
+
+.modal #modal-buttons {
+    margin-top: 15px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
 }
-
-.modal-breadcrumb span {
-    margin: 0 5px;
-}
-
-.modal-buttons .back-btn,
-.modal-buttons button {
-    margin: 5px;
+.modal #modal-buttons button {
+    background-color: var(--rzd-blue-action);
+    color: var(--rzd-white);
     padding: 10px 15px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background-color: #eee;
-    cursor: pointer;
-    font-size: 1em;
+    border: none;
+}
+.modal #modal-buttons button:hover:not(:disabled) {
+    background-color: var(--rzd-blue-hover);
+}
+.modal #modal-buttons button.back-btn {
+    background-color: var(--rzd-gray-text);
+}
+.modal #modal-buttons button.back-btn:hover:not(:disabled) {
+    background-color: #5a6268;
 }
 
-.modal-buttons .back-btn {
-    background-color: #f8f9fa;
-}
 
-.modal-buttons button:hover:not(:disabled) {
-    background-color: #ddd;
-}
-
-.modal-final-code {
+.modal #modal-final-code {
     margin-top: 20px;
-    padding: 10px;
-    background-color: #d4edda; /* Светло-зеленый */
-    border: 1px solid #c3e6cb;
-    border-radius: 4px;
-    color: #155724; /* Темно-зеленый */
+    padding: 12px;
+    background-color: var(--rzd-green-success-bg);
+    border: 1px solid var(--rzd-green-success-border);
+    border-radius: var(--border-radius);
+    color: var(--rzd-green-success-text);
     font-size: 1.1em;
-    font-weight: bold;
+    font-weight: 600;
     text-align: center;
 }
-
-.modal-actions {
-    margin-top: 20px;
+.modal .modal-actions {
+    margin-top: 25px;
+    padding-top: 15px;
+    border-top: 1px solid var(--rzd-gray-light);
     text-align: right;
-}
-
-/* Стили для кнопки "Сменить роль / Выйти" */
-.back-btn { /* Если используется тот же класс, что и для "Назад" */
-    /* Дополнительные стили, если нужно */
-    margin-top: 10px;
-}
-
-/* Стили для кнопок отправки заявки */
-.submit-request-btn {
-     background-color: #28a745; /* Зеленый */
-     color: white;
-     font-weight: bold;
-     padding: 10px 20px;
-}
-
-.submit-request-btn:hover:not(:disabled) {
-    background-color: #218838;
-}
-
-/* Стили для кнопки "Выбрать другую" */
-.reset-btn {
-     background-color: #ffc107; /* Желтый */
-     color: #343a40;
-}
-
-.reset-btn:hover:not(:disabled) {
-    background-color: #e0a800;
-}
-
-/* Анимации (скопированы из JS, но тут только CSS часть) */
-.fade-out {
-    opacity: 0;
-    transition: opacity 0.3s ease-out;
-}
-
-.fade-in {
-    opacity: 1;
-    transition: opacity 0.3s ease-in;
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
 }
 
 
-/* Адаптивность базовых элементов */
-@media (max-width: 768px) {
-    .container {
-        width: 95%;
-        padding: 15px;
+/* === АДАПТИВНОСТЬ (аналогично панели диспетчера) === */
+@media (max-width: 992px) { /* Планшеты */
+    .task-list {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
+    .container {
+        padding: 20px;
+    }
+}
 
-    header {
+@media (max-width: 768px) { /* Мобильные - большие */
+    header.panel-header {
         flex-direction: column;
         align-items: flex-start;
+        padding-bottom: 15px;
+        margin-bottom: 20px;
     }
-
-    .user-info {
+    header.panel-header .user-info {
         margin-top: 15px;
-    }
-
-    .stats-container {
-        flex-direction: column;
-    }
-
-    .stat-card {
         width: 100%;
-        margin: 5px 0;
+        justify-content: space-between;
     }
+    .stats-container {
+        grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+        gap: 15px;
+    }
+    .stat-value { font-size: 1.8em; }
 
     .controls {
         flex-direction: column;
-        gap: 10px;
+        align-items: stretch;
     }
-
-    .search-container, .filter-container {
-         width: 100%;
-    }
-
-    .buttons {
-        flex-direction: column;
-    }
-
-    .btn {
+    .search-container, .filter-container select {
         width: 100%;
-        text-align: center;
-        justify-content: center;
     }
 
-    .submit-request-btn.submit-request-btn { /* Увеличиваем специфичность */
-        margin-left: 0 !important; /* Отменяем margin для адаптивности */
-        margin-top: 10px; /* Добавляем верхний отступ */
+    .task-list {
+        grid-template-columns: 1fr;
+        gap: 15px;
     }
+    .task-card { padding: 15px; }
+    .task-info .label { min-width: 100px; }
 
     .modal-content {
         width: 95%;
+        margin: 5% auto; /* Уменьшим отступ для мобильных */
+        padding: 20px;
     }
+     .modal #modal-buttons button { /* Кнопки в модалке на мобильных */
+        width: 100%;
+    }
+    .modal .modal-actions {
+        flex-direction: column;
+    }
+    .modal .modal-actions button {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+    .modal .modal-actions button:last-child {
+        margin-bottom: 0;
+    }
+}
+
+@media (max-width: 480px) { /* Мобильные - маленькие */
+    .stats-container {
+        grid-template-columns: 1fr 1fr;
+    }
+    .task-info { font-size: 0.85em; }
+    .task-title { font-size: 1em; }
 }
